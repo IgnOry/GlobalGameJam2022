@@ -8,10 +8,15 @@ public class Room : MonoBehaviour
     public GameObject player;
     int enemies;
     int roomNumber = 1;
+
+    [SerializeField]
+    GameObject pawn;
+    [SerializeField]
+    GameObject bishop;
     // Start is called before the first frame update
     void Start()
     {
-        enemies = roomNumber + 2;
+        enemies = roomNumber + 1;
         board = GetComponent<Board>();
         board.player = player;
 
@@ -22,7 +27,7 @@ public class Room : MonoBehaviour
 
         for (int i = 0; i < board.enemies.Length; i++)
         {
-            _en = new GameObject("Enemy");
+            _en = Instantiate(pawn);// new GameObject("Enemy");
             en = _en.AddComponent<Enemy>();
             board.enemies[i] = _en;
         }
