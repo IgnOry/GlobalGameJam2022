@@ -41,7 +41,7 @@ public class Board : MonoBehaviour
             Enemy en = enemies[i].GetComponent<Enemy>();
             int xPos = Random.Range(0, size);
 
-            if (en.enemyClass == Class.Pawn)
+            if (en.enemyClass == EnemyClass.Pawn)
             {
                 while (board[xPos, 1])
                     xPos = Random.Range(0, size);
