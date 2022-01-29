@@ -11,7 +11,7 @@ public class Room : MonoBehaviour
     public Transform EnemiesParent;
     
     int enemies;
-    int roomNumber = 1;
+    int roomNumber = 0;
 
     public int size;
     public GameObject[,] boardGameObjects;
@@ -39,8 +39,9 @@ public class Room : MonoBehaviour
 
         for (int i = 0; i < enemiesArray.Length; i++)
         {
-            _en = Instantiate(pawn);// new GameObject("Enemy");
+            _en = Instantiate(bishop);
             en = _en.AddComponent<Enemy>();
+            en.enemyClass = EnemyClass.King;
             enemiesArray[i] = _en;
         }
 
@@ -80,6 +81,7 @@ public class Room : MonoBehaviour
                 boardGameObjects[i, j] = auxGO;
                 boardGameObjects[i, j].transform.parent = BoardParent;
                 boardGameObjects[i, j].transform.position = new Vector3(i, 0, j);
+                boardGameObjects[i, j].GetComponent<SquareMouseInteraction>().setPosition(i, j);
                 aux++;
             }
         }
@@ -115,11 +117,18 @@ public class Room : MonoBehaviour
             enemiesArray[i].transform.parent = EnemiesParent;
         }
     }
+
     public void SpawnPlayer()
     {
         int xPos = Random.Range(0, size);
 
-        player.GetComponent<Character>().position = new KeyValuePair<int, int>(xPos, size - 1);
-        board[xPos, size - 1] = true;
+        player = Instantiate(player);
+        Character c = player.GetComponent<Character>();
+        c.position = new KeyValuePair<int, int>(xPos, size - 1);
+
+        Vector3 pos = boardGameObjects[c.position.Key, c.position.Value].transform.position;
+        pos.y += 0.75f;
+        board[c.position.Key, c.position.Value] = true;
+        c.transform.position = pos;
     }
 }

@@ -10,14 +10,16 @@ public class Enemy : MonoBehaviour
     public EnemyClass enemyClass;
     public bool dead = false;
 
+
     // Start is called before the first frame update
     void Start()
     {
-        enemyClass = 0;
+        //enemyClass = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+
     }
 }
