@@ -7,6 +7,9 @@ public class LogicManager : MonoBehaviour
 {
     bool yourTurn = false;
     public Room room;
+    public AudioSource fluteSolo;
+    public AudioSource orientalSolo;
+
 
     public GameState currentState;
     // Start is called before the first frame update
@@ -96,6 +99,9 @@ public class LogicManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         currentState = GameState.EnemyTurn;
         StartCoroutine(processEnemiesTurn());
+
+        fluteSolo.volume = 1;
+        orientalSolo.volume = 0;
     }
 
     IEnumerator processEnemiesTurn()
@@ -126,6 +132,9 @@ public class LogicManager : MonoBehaviour
         {
             currentState = GameState.PlayerTurnMove;
             StartCoroutine(processYourTurn());
+
+            fluteSolo.volume = 0;
+            orientalSolo.volume = 1;
         }
     }
 

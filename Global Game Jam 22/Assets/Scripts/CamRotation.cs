@@ -9,7 +9,6 @@ public class CamRotation : MonoBehaviour
 
     void Update()
     {
-        //target = GameObject.Find("Pawn(Clone)").transform;
-        //transform.RotateAround(target.position, new Vector3(0.0f, 1.0f, 0.0f), 20 * Time.deltaTime * speedMod);
+        transform.RotateAround(target.position, new Vector3(0.0f, 1.0f, 0.0f), 20 * Time.deltaTime * speedMod);
     }
 }
