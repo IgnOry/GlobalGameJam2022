@@ -69,6 +69,38 @@ public class LogicManager : MonoBehaviour
         for (int i = 0; i < room.board.enemies.Length; i++)
         {
             //Enemy Turn
+
+            //Move enemies
+
+            //
+        }
+    }
+
+    public void EnemyMovement (EnemyClass c)
+    {
+        switch (c)
+        {
+            case EnemyClass.Pawn:
+                //If player is diagonally forward -> Attack
+
+                //Else, move forward
+
+                //If reach the board's end, change to Queen
+                break;
+            case EnemyClass.Tower:
+                //Move horizontal o vertical
+                break;
+            case EnemyClass.Horse:
+                break;
+            case EnemyClass.Bishop:
+                //Check diagonal -> Get to the player's closest square 
+                break;
+            case EnemyClass.Queen:
+                //Any direction, as long as wanted
+                break;
+            case EnemyClass.King:
+                //1 square in any direction
+                break;
         }
     }
 }
