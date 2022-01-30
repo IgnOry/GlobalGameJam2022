@@ -25,7 +25,25 @@ public class LogicManager : MonoBehaviour
     {
         perkPanel.gameObject.SetActive(true);
 
-        //Give each button a perk
+        int perk1 = Random.Range(0, 6);
+        int perk2 = perk1;
+
+        while (perk2 == perk1)
+            perk2 = Random.Range(0, 6);
+
+        for (int i = 0; i < perkPanel.childCount; i++)
+        {
+            perkPanel.GetChild(i).gameObject.SetActive(true);
+
+            PerkChoice pC = perkPanel.GetChild(i).gameObject.AddComponent<PerkChoice>();
+
+            if (i == 0)
+                pC.setPerk(perk1);
+            else
+                pC.setPerk(perk2);
+
+            perkPanel.GetChild(i).GetComponent<Button>().onClick.AddListener(pC.onClick);
+        }
     }
 
     public bool chosen = false;
@@ -63,6 +81,11 @@ public class LogicManager : MonoBehaviour
 
             while (!chosen)
                 yield return null;
+
+            for (int i = 0; i < perkPanel.childCount; i++)
+            {
+                perkPanel.GetChild(i).gameObject.SetActive(false);
+            }
 
             currentState = GameState.PlayerTurnMove;
             StartCoroutine(processYourTurn());

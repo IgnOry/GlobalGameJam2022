@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum WeaponEnum {Axe, Shurikens, Gauntlets, Boomerang };
 
-//0 - 5 positive, 6 - 11 negative
-public enum Perks { AddLife, AddMovement, AddAtack, AddDefense, AddRange, ReduceEnemyDefense, HalfLife, Movement1, LessDefense, LessRange, IncreaseEnemyDefense, SwapAttackDefense };
+//0 - 6 positive, 7 - 11 negative
+public enum Perks { AddLife, AddMovement, AddAtack, AddDefense, AddRange, ReduceEnemyDefense, ReduceEnemyAttack, HalfLife, Movement1, LessDefense, LessRange, IncreaseEnemyDefense, SwapAttackDefense };
 public class Character : MonoBehaviour
 {
     public KeyValuePair<int, int> position; //X, Y
@@ -23,6 +23,8 @@ public class Character : MonoBehaviour
         weapon = gameObject.AddComponent<Weapon>();
         weapon.type = GameManager.GetInstance().selectedWeapon;
         weapon.setUpWeapon();
+
+        perks = new Dictionary<Perks, int>();
     }
 
     // Update is called once per frame

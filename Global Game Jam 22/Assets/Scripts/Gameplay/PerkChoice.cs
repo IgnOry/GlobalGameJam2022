@@ -126,6 +126,9 @@ public class PerkChoice : MonoBehaviour
             case Perks.ReduceEnemyDefense:
                 lm.room.defenseModifier--;
                 break;
+            case Perks.ReduceEnemyAttack:
+                lm.room.attackModifier--;
+                break;
         }
 
         lm.chosen = true;
