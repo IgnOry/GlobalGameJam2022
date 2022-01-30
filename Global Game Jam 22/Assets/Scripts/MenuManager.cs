@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     public int actualPhase = 0;
+    public bool isVanguard = false;
 
     public GameObject creditsScreen;
     public GameObject muteText;
@@ -30,13 +31,63 @@ public class MenuManager : MonoBehaviour
 
     public void axeIconBehaviour()
     {
-        if (actualPhase == 2) GameManager.GetInstance().activateLoadingScreen("CreditsScene");
+        if (actualPhase == 2)
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Axe;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
+
         else goSelectionVanguard();
     }
     public void boomerangIconBehaviour()
     {
-        if (actualPhase == 2) GameManager.GetInstance().activateLoadingScreen("CreditsScene");
+        if (actualPhase == 2)
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Boomerang;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
+
         else goSelectionRetaguard();
+    }
+
+    public void gauntletIconBehaviour()
+    {
+        GameManager.GetInstance().selectedWeapon = WeaponEnum.Gauntlets;
+        GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+    }
+
+    public void shurikensIconBehaviour()
+    {
+        GameManager.GetInstance().selectedWeapon = WeaponEnum.Shurikens;
+        GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+    }
+
+    public void offensiveButtonBehaviour()
+    {
+        if (isVanguard)
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Axe;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
+        else
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Shurikens;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
+    }
+
+    public void defensiveButtonBehaviour()
+    {
+        if (isVanguard)
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Gauntlets;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
+        else
+        {
+            GameManager.GetInstance().selectedWeapon = WeaponEnum.Boomerang;
+            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        }
     }
 
     public void goSelectionScreen1()
@@ -60,6 +111,8 @@ public class MenuManager : MonoBehaviour
 
     public void goSelectionVanguard()
     {
+        isVanguard = true;
+
         vanguardButton.GetComponent<Button>().enabled = false;
         retaguardButton.GetComponent<Button>().enabled = false;
         retaguardBoomerangIcon.GetComponent<Button>().enabled = false;
