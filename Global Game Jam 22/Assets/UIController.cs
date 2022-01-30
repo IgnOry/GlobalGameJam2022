@@ -18,7 +18,7 @@ public class UIController : MonoBehaviour
     void Update()
     {
         if (player == null)
-            player = GameObject.Find("Player(Clone)").GetComponentInChildren<Character>();
+            player = GameObject.Find("Player").GetComponentInChildren<Character>();
         else
             lifeText.text = (player.currentHealth.ToString() + " / " + player.maxHealth.ToString());
     }

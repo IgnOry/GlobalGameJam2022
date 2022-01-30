@@ -51,6 +51,12 @@ public class SquareMouseInteraction : MonoBehaviour
             lM.waitingAttack = false;
             Debug.Log("ATAQUE");
 
+            if (c.weapon.type == WeaponEnum.Axe) c.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Axe Hit");
+            else if (c.weapon.type == WeaponEnum.Shurikens) c.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Boomerang Hit");
+            else if (c.weapon.type == WeaponEnum.Gauntlets) c.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Gauntlet Hit");
+            else if (c.weapon.type == WeaponEnum.Boomerang) c.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Shuriken Hit");
+            c.gameObject.GetComponent<AudioSource>().Play();
+
             c.currentHealth -= (en.attack - c.weapon.defense);
             en.currentHealth -= (c.weapon.attack - en.defense);
 

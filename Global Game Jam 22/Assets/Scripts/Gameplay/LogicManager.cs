@@ -409,6 +409,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Peon");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
