@@ -13,6 +13,7 @@ public class MenuManager : MonoBehaviour
     public GameObject muteText;
     public GameObject myCamera;
     public GameObject backToMainButton;
+    public GameObject howToButton;
 
     public GameObject vanguardAxelIcon;
     public GameObject vanguardGauntletIcon;
@@ -100,6 +101,7 @@ public class MenuManager : MonoBehaviour
         retaguardBoomerangIcon.GetComponent<Button>().enabled = true;
         vanguardButton.GetComponent<Button>().enabled = true;
         retaguardButton.GetComponent<Button>().enabled = true;
+        howToButton.GetComponent<Button>().enabled = true;
 
         mainLogo.GetComponent<Animation>()["SwipeUpLogo"].time = 0.0f;
         mainLogo.GetComponent<Animation>()["SwipeUpLogo"].speed = 1.0f;
@@ -114,6 +116,8 @@ public class MenuManager : MonoBehaviour
         settingsButton.GetComponent<Animation>()["SwipeDown"].speed = 1.0f;
         settingsButton.GetComponent<Animation>().Play("SwipeDown");
 
+        howToButton.transform.GetChild(0).GetComponent<Animation>().Play("FadeHowTo");
+
         vanguardAxelIcon.GetComponent<Animation>().Play("SwipeWeaponsIcon");
         retaguardBoomerangIcon.GetComponent<Animation>().Play("SwipeWeaponsIcon");
         vanguardButton.GetComponent<Animation>().Play("SwipeWeaponsText");
@@ -126,6 +130,9 @@ public class MenuManager : MonoBehaviour
     {
         isVanguard = true;
 
+        vanguardAxelIcon.GetComponent<Button>().enabled = true;
+        vanguardAxelIcon.GetComponent<Button>().interactable = false;
+        vanguardAxelIcon.GetComponent<Button>().interactable = true;
         vanguardGauntletIcon.GetComponent<Button>().enabled = true;
         offensiveButton.GetComponent<Button>().enabled = true;
         defensiveButton.GetComponent<Button>().enabled = true;
@@ -160,6 +167,10 @@ public class MenuManager : MonoBehaviour
         retaguardButton.GetComponent<Button>().enabled = false;
 
         retaguardBoomerangIcon.GetComponent<Button>().enabled = true;
+        retaguardBoomerangIcon.GetComponent<Button>().interactable = false;
+        retaguardBoomerangIcon.GetComponent<Button>().interactable = true;
+
+        retaguardShuriIcon.GetComponent<Button>().enabled = true;
         offensiveButton.GetComponent<Button>().enabled = true;
         defensiveButton.GetComponent<Button>().enabled = true;
 
