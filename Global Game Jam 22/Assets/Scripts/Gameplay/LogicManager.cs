@@ -254,7 +254,15 @@ public class LogicManager : MonoBehaviour
         }
         else
         {
-            //Process loss
+            GameObject rC = GameObject.Find("RoundCounter");
+            GameObject gO = GameObject.Find("GameOver");
+
+            rC.GetComponent<Animation>().Play("GameOverRound");
+
+            for (int i = 0; i < gO.transform.childCount; i++)
+            {
+                gO.transform.GetChild(i).GetComponentInChildren<Animation>().Play("SimpleFadeIn");
+            }
         }
     }
 
@@ -1270,17 +1278,17 @@ public class LogicManager : MonoBehaviour
             try
             {
                 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
+                room.board[c.position.Key, c.position.Value] = true;
+                room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
+                StartCoroutine(lerpPosition(c.transform, pos));
             }
             catch
             {
                 Debug.Log("a");
             }
             //pos.y += 0.75f;
-            room.board[c.position.Key, c.position.Value] = true;
-            room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
             //c.transform.position = pos;
 
-            StartCoroutine(lerpPosition(c.transform, pos));
         }
     }
 

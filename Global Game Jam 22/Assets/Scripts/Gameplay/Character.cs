@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
 {
     public KeyValuePair<int, int> position; //X, Y
     public bool dead = false;
-    public int maxHealth = 100;
+    public int maxHealth = 1;
     public float currentHealth;
     public int movement = 2;
     public Weapon weapon;
