@@ -38,6 +38,27 @@ public class PerkChoice : MonoBehaviour
             case Perks.ReduceEnemyAttack:
                 aux = "Reduces Enemy Attack by 1. Stackable";
                 break;
+            case Perks.HalfLife:
+                aux = "Halves Max HP. Stackable";
+                break;
+            case Perks.Movement1:
+                aux = "Reduces Max Movement. Not Stackable";
+                break;
+            case Perks.LessDefense:
+                aux = "Reduces Defense by 1. Stackable";
+                break;
+            case Perks.LessRange:
+                aux = "Reduces Range by 1. Not Stackable";
+                break;
+            case Perks.IncreaseEnemyDefense:
+                aux = "Increases Enemy Defense by 1. Stackable";
+                break;
+            case Perks.IncreaseEnemyAttack:
+                aux = "Increases Enemy Attack by 1. Stackable";
+                break;
+            case Perks.SwapAttackDefense:
+                aux = "Swaps your Attack and Defense";
+                break;
         }
         gameObject.GetComponentInChildren<Text>().text = aux;
     }
