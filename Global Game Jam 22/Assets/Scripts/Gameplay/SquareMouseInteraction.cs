@@ -51,8 +51,6 @@ public class SquareMouseInteraction : MonoBehaviour
             lM.waitingAttack = false;
             Debug.Log("ATAQUE");
 
-            int playerAtt = c.weapon.attack;
-
             c.currentHealth -= (en.attack - c.weapon.defense);
             en.currentHealth -= (c.weapon.attack - en.defense);
 

@@ -35,7 +35,7 @@ public class MenuManager : MonoBehaviour
         if (actualPhase == 2)
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Axe;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
 
         else goSelectionVanguard();
@@ -45,7 +45,7 @@ public class MenuManager : MonoBehaviour
         if (actualPhase == 2)
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Boomerang;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
 
         else goSelectionRetaguard();
@@ -54,13 +54,13 @@ public class MenuManager : MonoBehaviour
     public void gauntletIconBehaviour()
     {
         GameManager.GetInstance().selectedWeapon = WeaponEnum.Gauntlets;
-        GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        SceneManager.LoadScene("GameplayScene");
     }
 
     public void shurikensIconBehaviour()
     {
         GameManager.GetInstance().selectedWeapon = WeaponEnum.Shurikens;
-        GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+        SceneManager.LoadScene("GameplayScene");
     }
 
     public void offensiveButtonBehaviour()
@@ -68,12 +68,12 @@ public class MenuManager : MonoBehaviour
         if (isVanguard)
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Axe;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
         else
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Shurikens;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
     }
 
@@ -82,12 +82,12 @@ public class MenuManager : MonoBehaviour
         if (isVanguard)
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Gauntlets;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
         else
         {
             GameManager.GetInstance().selectedWeapon = WeaponEnum.Boomerang;
-            GameManager.GetInstance().activateLoadingScreen("GameplayScene");
+            SceneManager.LoadScene("GameplayScene");
         }
     }
 

@@ -11,7 +11,7 @@ public class Room : MonoBehaviour
     public Transform EnemiesParent;
     
     int enemies;
-    int roomNumber = 1;
+    public int round = 1;
 
     public int size;
     public GameObject[,] boardGameObjects;
@@ -23,17 +23,20 @@ public class Room : MonoBehaviour
     GameObject pawn;
     [SerializeField]
     GameObject bishop;
+
+    public int defenseModifier = 0;
+    public int attackModifier = 0;
     // Start is called before the first frame update
     public void SetUpRoom()
     {
         BoardParent = transform.GetChild(0);
         EnemiesParent = transform.GetChild(1);
-            
-        enemies = roomNumber + 1;
+
+        enemies = getEnemies();
         SetupBoard();
 
         enemiesArray = new GameObject[enemies];
-        
+
         GameObject _en;
         Enemy en;
 
@@ -44,14 +47,123 @@ public class Room : MonoBehaviour
             enemiesArray[i] = _en;
 
             //Assign class
-            en.enemyClass = EnemyClass.Queen;
-            en.setUpEnemy();
+            if (round > 10 && i == 0)
+            {
+                en.enemyClass = EnemyClass.King;
+            }
+            else
+                setEnemyClass(en);
+            en.setUpEnemy(defenseModifier, attackModifier);
         }
 
         SpawnEnemies();
         SpawnPlayer();
     }
 
+    void setEnemyClass(Enemy en)
+    {
+        int random = Random.Range(0, 100);
+
+        if (round == 1)
+        {
+            en.enemyClass = EnemyClass.Pawn;
+        }
+        else if (round == 2)
+        {
+            if (random < 70)
+                en.enemyClass = EnemyClass.Pawn;
+            else if (random < 80)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 90)
+                en.enemyClass = EnemyClass.Horse;
+            else
+                en.enemyClass = EnemyClass.Bishop;
+        }
+        else if (round == 3)
+        {
+            if (random < 40)
+                en.enemyClass = EnemyClass.Pawn;
+            else if (random < 60)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 80)
+                en.enemyClass = EnemyClass.Horse;
+            else
+                en.enemyClass = EnemyClass.Bishop;
+        }
+        else if (round < 11)
+        {
+            if (random < 10)
+                en.enemyClass = EnemyClass.Pawn;
+            else if (random < 40)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 70)
+                en.enemyClass = EnemyClass.Horse;
+            else
+                en.enemyClass = EnemyClass.Bishop;
+        }
+        else if (round < 16)
+        {
+            if (random < 10)
+                en.enemyClass = EnemyClass.Pawn;
+            if (random < 35)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 60)
+                en.enemyClass = EnemyClass.Horse;
+            else if (random < 85)
+                en.enemyClass = EnemyClass.Bishop;
+            else
+                en.enemyClass = EnemyClass.Queen;
+        }
+        else if (round < 26)
+        {
+            if (random < 10)
+                en.enemyClass = EnemyClass.Pawn;
+            if (random < 30)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 50)
+                en.enemyClass = EnemyClass.Horse;
+            else if (random < 70)
+                en.enemyClass = EnemyClass.Bishop;
+            else
+                en.enemyClass = EnemyClass.Queen;
+        }
+        else
+        {
+            if (random < 5)
+                en.enemyClass = EnemyClass.Pawn;
+            if (random < 23)
+                en.enemyClass = EnemyClass.Tower;
+            else if (random < 41)
+                en.enemyClass = EnemyClass.Horse;
+            else if (random < 59)
+                en.enemyClass = EnemyClass.Bishop;
+            else
+                en.enemyClass = EnemyClass.Queen;
+        }
+    }
+    int getEnemies()
+    {
+        int ret = 1;
+
+        if (round > 0 && round < 4)
+        {
+            return round;
+        }
+        else
+        {
+            if (round < 8)
+                return 5;
+            else if (round < 11)
+                return 6;
+            else
+            {
+                return (5 + round % 5);
+            }
+        }
+
+        return ret;
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -127,6 +239,8 @@ public class Room : MonoBehaviour
 
         Character c = player.GetComponent<Character>();
         c.position = new KeyValuePair<int, int>(xPos, size - 1);
+
+        c.currentHealth = c.maxHealth;
 
         Vector3 pos = boardGameObjects[c.position.Key, c.position.Value].transform.position;
         pos.y += 0.75f;

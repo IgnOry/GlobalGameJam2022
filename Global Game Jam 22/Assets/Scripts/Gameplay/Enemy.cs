@@ -20,44 +20,44 @@ public class Enemy : MonoBehaviour
     public int accuracy;
     // Start is called before the first frame update
     
-    public void setUpEnemy()
+    public void setUpEnemy(int defMod, int AttMod)
     {
          switch (enemyClass)
         {
             case EnemyClass.Pawn:
                 maxHealth = 45;
-                attack = 30;
-                defense = 5;
+                attack = 30 + AttMod;
+                defense = 5 + defMod;
                 accuracy = 70;
                 break;
             case EnemyClass.Tower:
                 maxHealth = 75;
-                attack = 40;
-                defense = 10;
+                attack = 40 + AttMod;
+                defense = 10 + defMod;
                 accuracy = 90;
                 break;
             case EnemyClass.Horse:
                 maxHealth = 50;
-                attack = 35;
-                defense = 7;
+                attack = 35 + AttMod;
+                defense = 7 + defMod;
                 accuracy = 80;
                 break;
             case EnemyClass.Bishop:
                 maxHealth = 35;
-                attack = 50;
-                defense = 5;
+                attack = 50 + AttMod;
+                defense = 5 + defMod;
                 accuracy = 95;
                 break;
             case EnemyClass.Queen:
                 maxHealth = 40;
-                attack = 60;
-                defense = 5;
+                attack = 60 + AttMod;
+                defense = 5 + defMod;
                 accuracy = 100;
                 break;
             case EnemyClass.King:
                 maxHealth = 80;
-                attack = 55;
-                defense = 7;
+                attack = 55 + AttMod;
+                defense = 7 + defMod;
                 accuracy = 95;
                 break;
         }

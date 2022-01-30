@@ -4,6 +4,8 @@ using UnityEngine;
 
 public enum WeaponEnum {Axe, Shurikens, Gauntlets, Boomerang };
 
+//0 - 5 positive, 6 - 11 negative
+public enum Perks { AddLife, AddMovement, AddAtack, AddDefense, AddRange, ReduceEnemyDefense, HalfLife, Movement1, LessDefense, LessRange, IncreaseEnemyDefense, SwapAttackDefense };
 public class Character : MonoBehaviour
 {
     public KeyValuePair<int, int> position; //X, Y
@@ -12,6 +14,8 @@ public class Character : MonoBehaviour
     public float currentHealth;
     public int movement = 2;
     public Weapon weapon;
+
+    public Dictionary<Perks, int> perks;
     // Start is called before the first frame update
     void Start()
     {

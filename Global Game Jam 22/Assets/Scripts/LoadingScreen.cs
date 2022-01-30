@@ -23,29 +23,30 @@ public class LoadingScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (loadingOperation != null)
-        {
-           slider.value = Mathf.Clamp01(loadingOperation.progress * auxTime / 0.9f);
+        if (auxTime < minTime)
+        { 
+           slider.value = Mathf.Clamp01(auxTime/ minTime);
            auxTime += Time.deltaTime;
-
-            if (loadingOperation.isDone && auxTime > minTime)
-            {
-                canvas.alpha = 0;
-                loadingOperation = null;
-                StartCoroutine(FadeLoadingScreen(1.0f));
-            }
+        }
+        else if (loadingOperation != null && loadingOperation.isDone)
+        {
+            canvas.alpha = 0;
+            loadingOperation = null;
+            StartCoroutine(FadeLoadingScreen(1.0f));
         }
     }
 
     public IEnumerator changeScene(string sceneName)
     {
         canvas.alpha = 1;
-        auxTime = 0.0f;
 
-        loadingOperation = SceneManager.LoadSceneAsync(sceneName);
-        while (!loadingOperation.isDone)
+        if (auxTime > minTime)
         {
-            yield return null;
+            loadingOperation = SceneManager.LoadSceneAsync(sceneName);
+            while (!loadingOperation.isDone)
+            {
+                yield return null;
+            }
         }
     }
 

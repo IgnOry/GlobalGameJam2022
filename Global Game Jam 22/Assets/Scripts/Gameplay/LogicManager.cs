@@ -1,22 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum GameState { BattleStart, PlayerTurnMove, PlayerTurnAttack, EnemyTurn, Win, Loss};
 public class LogicManager : MonoBehaviour
 {
-    bool yourTurn = false;
     public Room room;
     public AudioSource fluteSolo;
     public AudioSource orientalSolo;
-
-
     public GameState currentState;
+
+    public RectTransform perkPanel;
     // Start is called before the first frame update
     void Start()
     {
         room = GameObject.Find("Room").GetComponent<Room>();
+        posibleMoves = new List<KeyValuePair<KeyValuePair<int, int>, int>>();
+        perkPanel = GameObject.Find("Panel").GetComponent<RectTransform>();
+        StartCoroutine(StartBattle());
+    }
 
+    void setUpPerks()
+    {
+        perkPanel.gameObject.SetActive(true);
+
+        //Give each button a perk
+    }
+
+    public bool chosen = false;
+    public IEnumerator StartBattle()
+    {
         currentState = GameState.BattleStart;
 
         //Setup room battle
@@ -25,30 +39,34 @@ public class LogicManager : MonoBehaviour
         posibleMoves = new List<KeyValuePair<KeyValuePair<int, int>, int>>();
 
         //Thow Coin, depending on result
-        //currentState = GameState.PlayerTurn;
-        if (true)
+
+        chosen = false;
+
+        int coin = Random.Range(0, 100);
+
+        //Animation and stuff
+
+        //Choose perk
+        if (coin > 50)
         {
+            Debug.Log("Cruz");
+
+            //Desventaja
+
             currentState = GameState.EnemyTurn;
             StartCoroutine(processEnemiesTurn());
         }
-        else 
+        else
         {
-            //currentState = GameState.PlayerTurn;
-            //StartCoroutine(processYourTurn());
-        }
-    }
+            Debug.Log("Cara");
+            setUpPerks();
 
-    // Update is called once per frame
-    void Update()
-    {
-        //if (currentState == GameState.PlayerTurn)
-        //{
-        //    processYourTurn();
-        //}
-        //else if (currentState == GameState.EnemyTurn)
-        //{
-        //    processEnemiesTurn();
-        //}
+            while (!chosen)
+                yield return null;
+
+            currentState = GameState.PlayerTurnMove;
+            StartCoroutine(processYourTurn());
+        }
     }
 
     bool checkWinCondition()
@@ -124,7 +142,7 @@ public class LogicManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
         if (checkWinCondition())
         {
@@ -132,6 +150,10 @@ public class LogicManager : MonoBehaviour
 
             Debug.Log("DE PUTOS LOCOS");
             room.cleanUp();
+
+            yield return new WaitForSeconds(0.5f);
+            room.round++;
+            StartCoroutine(StartBattle());
         }
         else
         {
@@ -165,7 +187,7 @@ public class LogicManager : MonoBehaviour
         for (int i = 1; i <= c.weapon.range; i++)
         {
             //TopLeft
-            if (c.position.Key-i > 0 && c.position.Value-i > 0)
+            if (c.position.Key-i >= 0 && c.position.Value-i >= 0)
             {
                 if (room.board[c.position.Key - i, c.position.Value - i])
                 {
@@ -175,7 +197,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Top
-            if (c.position.Value - i > 0)
+            if (c.position.Value - i >= 0)
             {
                 if (room.board[c.position.Key, c.position.Value - i])
                 {
@@ -185,7 +207,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //TopRight
-            if (c.position.Key + i < (room.size-1) && c.position.Value - i > 0)
+            if (c.position.Key + i <= (room.size-1) && c.position.Value - i >= 0)
             {
                 if (room.board[c.position.Key + i, c.position.Value - i])
                 {
@@ -195,7 +217,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Left
-            if (c.position.Key - i > 0)
+            if (c.position.Key - i >= 0)
             {
                 if (room.board[c.position.Key - i, c.position.Value])
                 {
@@ -205,7 +227,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Right
-            if (c.position.Key + i < (room.size-1))
+            if (c.position.Key + i <= (room.size-1))
             {
                 if (room.board[c.position.Key + i, c.position.Value])
                 {
@@ -215,7 +237,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //BotLeft
-            if (c.position.Key - i > 0 && c.position.Value + i < (room.size-1))
+            if (c.position.Key - i >= 0 && c.position.Value + i <= (room.size-1))
             {
                 if (room.board[c.position.Key - i, c.position.Value + i])
                 {
@@ -225,7 +247,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Bot
-            if (c.position.Value + i < (room.size-1))
+            if (c.position.Value + i <= (room.size-1))
             {
                 if (room.board[c.position.Key, c.position.Value + i])
                 {
@@ -235,7 +257,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //BotRight
-            if (c.position.Key + i < (room.size - 1) && c.position.Value + i < (room.size-1))
+            if (c.position.Key + i <= (room.size - 1) && c.position.Value + i <= (room.size-1))
             {
                 if (room.board[c.position.Key + i, c.position.Value + i])
                 {
@@ -275,7 +297,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //TopRight
-            if (c.position.Key + i < (room.size - 1) && c.position.Value - i >= 0)
+            if (c.position.Key + i <= (room.size - 1) && c.position.Value - i >= 0)
             {
                 if (!room.board[c.position.Key + i, c.position.Value - i])
                 {
@@ -293,7 +315,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Right
-            if (c.position.Key + i < (room.size - 1))
+            if (c.position.Key + i <= (room.size - 1))
             {
                 if (!room.board[c.position.Key + i, c.position.Value])
                 {
@@ -302,7 +324,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //BotLeft
-            if (c.position.Key - i >= 0 && c.position.Value + i < (room.size - 1))
+            if (c.position.Key - i >= 0 && c.position.Value + i <= (room.size - 1))
             {
                 if (!room.board[c.position.Key - i, c.position.Value + i])
                 {
@@ -311,7 +333,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //Bot
-            if (c.position.Value + i < (room.size - 1))
+            if (c.position.Value + i <= (room.size - 1))
             {
                 if (!room.board[c.position.Key, c.position.Value + i])
                 {
@@ -320,7 +342,7 @@ public class LogicManager : MonoBehaviour
                 }
             }
             //BotRight
-            if (c.position.Key + i < (room.size - 1) && c.position.Value + i < (room.size - 1))
+            if (c.position.Key + i <= (room.size - 1) && c.position.Value + i <= (room.size - 1))
             {
                 if (!room.board[c.position.Key + i, c.position.Value + i])
                 {
@@ -339,6 +361,8 @@ public class LogicManager : MonoBehaviour
     List<KeyValuePair<KeyValuePair<int, int>, int>> posibleMoves;
     public void EnemyMovement (Enemy c)
     {
+        bool attack = false;
+
         Character character = room.player.GetComponent<Character>();
         int i = 0; //aux
         int dist1X = c.position.Key;
@@ -361,10 +385,34 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key - 1 == character.position.Key)
                     {
                         Debug.Log("Ataque Peon");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else if (c.position.Key + 1 == character.position.Key)
                     {
                         Debug.Log("Ataque Peon");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                 }
                 else if (c.position.Value < (room.size - 1))
@@ -373,12 +421,11 @@ public class LogicManager : MonoBehaviour
                         c.position = new KeyValuePair<int, int>(c.position.Key, c.position.Value + 1);
 
                     if (c.position.Value == (room.size - 1))
-                        Debug.Log("Peon -> Reina");
+                    {
+                        c.enemyClass = EnemyClass.Queen;
+                        Debug.Log("Peon -> Reina"); 
+                    }
                 }
-
-                //Else, move forward
-
-                //If reach the board's end, change to Queen
                 break;
             case EnemyClass.Tower:
                 //Move horizontal o vertical
@@ -393,6 +440,20 @@ public class LogicManager : MonoBehaviour
                     {
                         c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value + 1);
                     }
+
+                    Debug.Log("Ataque Torre");
+
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
+                    }
                 }
                 else if (c.position.Value == character.position.Value) //Attack
                 {
@@ -403,6 +464,20 @@ public class LogicManager : MonoBehaviour
                     else
                     {
                         c.position = new KeyValuePair<int, int>(c.position.Key + 1, character.position.Value);
+                    }
+
+                    Debug.Log("Ataque Torre");
+
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
                     }
                 }
                 else //Get Close
@@ -442,12 +517,151 @@ public class LogicManager : MonoBehaviour
                 }           
                 break;
             case EnemyClass.Horse:
+                int horseX;
+                int horseY;
 
+                if (c.position.Key - 1 >= 0 && c.position.Value - 2 >= 0)
+                { 
+                    if (c.position.Key - 1 == character.position.Key && c.position.Value - 2 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value - 2) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key - 1), (c.position.Value - 2)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 1 >= 0 && c.position.Value - 2 >= 0)
+                {
+                    if (c.position.Key + 1 == character.position.Key && c.position.Value - 2 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value - 2) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key + 1), (c.position.Value - 2)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 2 >= 0 && c.position.Value - 1 >= 0)
+                {
+                    if (c.position.Key + 2 == character.position.Key && c.position.Value - 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key + 2) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key + 2), (c.position.Value - 1)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 2 >= 0 && c.position.Value + 1 >= 0)
+                {
+                    if (c.position.Key + 2 == character.position.Key && c.position.Value + 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key + 2) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key + 2), (c.position.Value + 1)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 1 >= 0 && c.position.Value + 2 >= 0)
+                {
+                    if (c.position.Key + 1 == character.position.Key && c.position.Value + 2 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value + 2) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key + 1), (c.position.Value + 2)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key - 1 >= 0 && c.position.Value + 2 >= 0)
+                {
+                    if (c.position.Key -1 == character.position.Key && c.position.Value +2 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value + 2) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key - 1), (c.position.Value + 2)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key - 2 >= 0 && c.position.Value + 1 >= 0)
+                {
+                    if (c.position.Key - 2 == character.position.Key && c.position.Value + 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key - 2) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key - 2), (c.position.Value + 1)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key - 2 >= 0 && c.position.Value - 1 >= 0)
+                {
+                    if (c.position.Key - 2 == character.position.Key && c.position.Value - 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Caballo");
+                        attack = true;
+                    }
+                    else
+                    {
+                        horseX = Mathf.Abs((c.position.Key - 2) - character.position.Key);
+                        horseY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>((c.position.Key - 2), (c.position.Value - 1)), horseX + horseY);
+                        posibleMoves.Add(entry);
+                    }
+                }
 
+                if (!attack)
+                {
+                    posibleMoves.Sort(Compare1);
+                    c.position = posibleMoves[0].Key;
+                }
+                else
+                {
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
+                    }
+                }
                 break;
             case EnemyClass.Bishop: //Review a little bit
-                bool attack = false;
-
                 int auxX = 0;
                 int auxY = 0;
 
@@ -558,7 +772,21 @@ public class LogicManager : MonoBehaviour
                 posibleMoves.Sort(Compare1);
 
                 if (attack)
+                {
                     c.position = new KeyValuePair<int, int>(auxX, auxY);
+
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
+                    }
+                }
                 else
                 {
                     try
@@ -582,6 +810,20 @@ public class LogicManager : MonoBehaviour
                     {
                         c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value + 1);
                     }
+
+                    Debug.Log("Ataque Reina");
+
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
+                    }
                 }
                 else if (c.position.Value == character.position.Value) //Attack
                 {
@@ -592,6 +834,20 @@ public class LogicManager : MonoBehaviour
                     else
                     {
                         c.position = new KeyValuePair<int, int>(c.position.Key + 1, character.position.Value);
+                    }
+
+                    Debug.Log("Ataque Reina");
+
+                    character.currentHealth -= (c.attack - character.weapon.defense);
+                    c.currentHealth -= (character.weapon.attack - c.defense);
+
+                    c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                    if (c.currentHealth <= 0)
+                    {
+                        c.currentHealth = 0;
+                        c.Die();
+                        room.board[c.position.Key, c.position.Value] = false;
                     }
                 }
                 else //Get Close
@@ -637,11 +893,23 @@ public class LogicManager : MonoBehaviour
                 int dX;
                 int dY;
 
-                if (c.position.Key - 1 > 0) //Left
+                if (c.position.Key - 1 >= 0) //Left
                 {
                     if (c.position.Key - 1 == character.position.Key && c.position.Value == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -657,6 +925,18 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key + 1 == character.position.Key && c.position.Value == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -667,11 +947,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Value - 1 > 0) //Top
+                if (c.position.Value - 1 >= 0) //Top
                 {
                     if (c.position.Key == character.position.Key && c.position.Value -1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -682,11 +974,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Value + 1 < (room.size - 1)) //Bot
+                if (c.position.Value + 1 <= (room.size - 1)) //Bot
                 {
                     if (c.position.Key == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -697,11 +1001,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key - 1 > 0 && c.position.Value - 1 > 0) //LeftTop
+                if (c.position.Key - 1 >= 0 && c.position.Value - 1 >= 0) //LeftTop
                 {
                     if (c.position.Key - 1 == character.position.Key && c.position.Value - 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -712,11 +1028,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key - 1 > 0 && c.position.Value + 1 < (room.size-1)) //LeftBot
+                if (c.position.Key - 1 >= 0 && c.position.Value + 1 < (room.size-1)) //LeftBot
                 {
                     if (c.position.Key - 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -727,11 +1055,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 1 < (room.size - 1) && c.position.Value - 1 > 0) //RightTop
+                if (c.position.Key + 1 <= (room.size - 1) && c.position.Value - 1 >= 0) //RightTop
                 {
                     if (c.position.Key + 1 == character.position.Key && c.position.Value - 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
@@ -742,11 +1082,23 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 1 < (room.size - 1) && c.position.Value + 1 < (room.size-1)) //RightBot
+                if (c.position.Key + 1 <= (room.size - 1) && c.position.Value + 1 < (room.size-1)) //RightBot
                 {
                     if (c.position.Key + 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
                     }
                     else
                     {
