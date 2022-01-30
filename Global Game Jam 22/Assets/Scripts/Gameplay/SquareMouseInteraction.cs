@@ -57,9 +57,15 @@ public class SquareMouseInteraction : MonoBehaviour
             else if (c.weapon.type == WeaponEnum.Boomerang) c.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Shuriken Hit");
             c.gameObject.GetComponent<AudioSource>().Play();
 
-            c.currentHealth -= (en.attack - c.weapon.defense);
-            en.currentHealth -= (c.weapon.attack - en.defense);
-
+            try
+            {
+                c.currentHealth -= (en.attack - c.weapon.defense) * .25f;
+                en.currentHealth -= (c.weapon.attack - en.defense);
+            }
+            catch
+            {
+                Debug.Log("a");
+            }
             en.GetComponentInChildren<Slider>().value = en.currentHealth;
 
             if (en.currentHealth <= 0)

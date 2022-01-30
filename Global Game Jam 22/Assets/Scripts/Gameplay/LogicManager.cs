@@ -107,6 +107,14 @@ public class LogicManager : MonoBehaviour
         return ret;
     }
 
+    bool checkLostCondition()
+    {
+        if (room.player.GetComponent<Character>().currentHealth <= 0)
+            return true;
+        else
+            return false;
+    }
+
     public bool waitingMove = false;
     public bool waitingAttack = false;
     public bool canAttack = false;
@@ -148,43 +156,60 @@ public class LogicManager : MonoBehaviour
 
     IEnumerator processEnemiesTurn()
     {
-        if (room.player.GetComponent<Character>().dead)
+        if (checkLostCondition())
         {
-            //Process Loss
+            currentState = GameState.Loss;
+            Debug.Log("SOS MALISIMO");
         }
 
-        for (int i = 0; i < room.enemiesArray.Length; i++)
+        if (currentState != GameState.Loss)
         {
-            if (!room.enemiesArray[i].GetComponent<Enemy>().dead)
+            for (int i = 0; i < room.enemiesArray.Length; i++)
             {
-                //Enemy Turn
+                if (!room.enemiesArray[i].GetComponent<Enemy>().dead)
+                {
+                    //Enemy Turn
 
-                //Move enemies
-                EnemyMovement(room.enemiesArray[i].GetComponent<Enemy>());
-                yield return new WaitForSeconds(0.5f);
+                    //Move enemies
+                    EnemyMovement(room.enemiesArray[i].GetComponent<Enemy>());
+                    yield return new WaitForSeconds(0.5f);
+
+                    if (checkLostCondition())
+                    {
+                        currentState = GameState.Loss;
+                        Debug.Log("SOS MALISIMO");
+                    }
+                }
             }
         }
 
         yield return new WaitForSeconds(0.5f);
 
-        if (checkWinCondition())
+        if (currentState != GameState.Loss)
         {
-            currentState = GameState.Win;
+            if (checkWinCondition())
+            {
+                currentState = GameState.Win;
 
-            Debug.Log("DE PUTOS LOCOS");
-            room.cleanUp();
+                Debug.Log("DE PUTOS LOCOS");
+                room.cleanUp();
 
-            yield return new WaitForSeconds(0.5f);
-            room.round++;
-            StartCoroutine(StartBattle());
+                yield return new WaitForSeconds(0.5f);
+                room.round++;
+                StartCoroutine(StartBattle());
+            }
+            else
+            {
+                currentState = GameState.PlayerTurnMove;
+                StartCoroutine(processYourTurn());
+
+                fluteSolo.volume = 0;
+                orientalSolo.volume = 1;
+            }
         }
         else
         {
-            currentState = GameState.PlayerTurnMove;
-            StartCoroutine(processYourTurn());
-
-            fluteSolo.volume = 0;
-            orientalSolo.volume = 1;
+            //Process loss
         }
     }
 
@@ -503,7 +528,14 @@ public class LogicManager : MonoBehaviour
                     {
                         c.currentHealth = 0;
                         c.Die();
-                        room.board[c.position.Key, c.position.Value] = false;
+                        try
+                        {
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
+                        catch
+                        {
+                            Debug.Log("a");
+                        }
                     }
                 }
                 else //Get Close
@@ -553,7 +585,7 @@ public class LogicManager : MonoBehaviour
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key - 1, c.position.Value - 2])
                     {
                         horseX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value - 2) - character.position.Value);
@@ -561,14 +593,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 1 >= 0 && c.position.Value - 2 >= 0)
+                if (c.position.Key + 1 <= (room.size - 1) && c.position.Value - 2 >= 0)
                 {
                     if (c.position.Key + 1 == character.position.Key && c.position.Value - 2 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key + 1, c.position.Value - 2])
                     {
                         horseX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value - 2) - character.position.Value);
@@ -576,14 +608,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 2 >= 0 && c.position.Value - 1 >= 0)
+                if (c.position.Key + 2 <= (room.size - 1) && c.position.Value - 1 >= 0)
                 {
                     if (c.position.Key + 2 == character.position.Key && c.position.Value - 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key + 2, c.position.Value - 1])
                     {
                         horseX = Mathf.Abs((c.position.Key + 2) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
@@ -591,14 +623,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 2 >= 0 && c.position.Value + 1 >= 0)
+                if (c.position.Key + 2 <= (room.size - 1) && c.position.Value + 1 <= (room.size - 1))
                 {
                     if (c.position.Key + 2 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key + 2, c.position.Value + 1])
                     {
                         horseX = Mathf.Abs((c.position.Key + 2) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
@@ -606,14 +638,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key + 1 >= 0 && c.position.Value + 2 >= 0)
+                if (c.position.Key + 1 <= (room.size-1) && c.position.Value + 2 <= (room.size - 1))
                 {
                     if (c.position.Key + 1 == character.position.Key && c.position.Value + 2 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key + 1, c.position.Value + 2])
                     {
                         horseX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value + 2) - character.position.Value);
@@ -621,14 +653,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key - 1 >= 0 && c.position.Value + 2 >= 0)
+                if (c.position.Key - 1 >= 0 && c.position.Value + 2 <= (room.size - 1))
                 {
                     if (c.position.Key -1 == character.position.Key && c.position.Value +2 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key - 1, c.position.Value + 2])
                     {
                         horseX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value + 2) - character.position.Value);
@@ -636,14 +668,14 @@ public class LogicManager : MonoBehaviour
                         posibleMoves.Add(entry);
                     }
                 }
-                if (c.position.Key - 2 >= 0 && c.position.Value + 1 >= 0)
+                if (c.position.Key - 2 >= 0 && c.position.Value + 1 <= (room.size - 1))
                 {
                     if (c.position.Key - 2 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key - 2, c.position.Value + 1])
                     {
                         horseX = Mathf.Abs((c.position.Key - 2) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
@@ -658,7 +690,7 @@ public class LogicManager : MonoBehaviour
                         Debug.Log("Ataque Caballo");
                         attack = true;
                     }
-                    else
+                    else if (!room.board[c.position.Key - 2, c.position.Value - 1])
                     {
                         horseX = Mathf.Abs((c.position.Key - 2) - character.position.Key);
                         horseY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
@@ -1141,13 +1173,16 @@ public class LogicManager : MonoBehaviour
                 break;
         }
 
-        Vector3 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
-        pos.y += 0.75f;
-        room.board[c.position.Key, c.position.Value] = true;
-        room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
-        //c.transform.position = pos;
+        if (!c.dead)
+        {
+            Vector3 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
+            pos.y += 0.75f;
+            room.board[c.position.Key, c.position.Value] = true;
+            room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
+            //c.transform.position = pos;
 
-        StartCoroutine(lerpPosition(c.transform, pos));
+            StartCoroutine(lerpPosition(c.transform, pos));
+        }
     }
 
     public IEnumerator lerpPosition(Transform t, Vector3 endPos, float waitTime = 1.5f)
@@ -1156,12 +1191,18 @@ public class LogicManager : MonoBehaviour
 
         while (auxTime < waitTime)
         {
-            t.position = Vector3.Lerp(t.position, endPos, auxTime/waitTime);
-            auxTime += Time.deltaTime;
-            yield return null;
-        }
+            if (t != null)
+            {
+                t.position = Vector3.Lerp(t.position, endPos, auxTime / waitTime);
+            }
+                auxTime += Time.deltaTime;
+                yield return null;
 
-        t.position = endPos;
-        yield return null;
+        }
+        if (t != null)
+        {
+            t.position = endPos;
+        }
+            yield return null;     
     }
 }
