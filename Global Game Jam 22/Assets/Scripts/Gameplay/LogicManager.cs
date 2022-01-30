@@ -453,6 +453,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Peon");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -495,6 +498,9 @@ public class LogicManager : MonoBehaviour
 
                     Debug.Log("Ataque Torre");
 
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
+
                     character.currentHealth -= (c.attack - character.weapon.defense);
                     c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -519,6 +525,9 @@ public class LogicManager : MonoBehaviour
                     }
 
                     Debug.Log("Ataque Torre");
+
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
 
                     character.currentHealth -= (c.attack - character.weapon.defense);
                     c.currentHealth -= (character.weapon.attack - c.defense);
@@ -707,6 +716,9 @@ public class LogicManager : MonoBehaviour
                 }
                 else
                 {
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
+
                     character.currentHealth -= (c.attack - character.weapon.defense);
                     c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -832,6 +844,9 @@ public class LogicManager : MonoBehaviour
 
                 if (attack)
                 {
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
+
                     c.position = new KeyValuePair<int, int>(auxX, auxY);
 
                     character.currentHealth -= (c.attack - character.weapon.defense);
@@ -872,6 +887,9 @@ public class LogicManager : MonoBehaviour
 
                     Debug.Log("Ataque Reina");
 
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
+
                     character.currentHealth -= (c.attack - character.weapon.defense);
                     c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -896,6 +914,9 @@ public class LogicManager : MonoBehaviour
                     }
 
                     Debug.Log("Ataque Reina");
+
+                    character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                    character.gameObject.GetComponent<AudioSource>().Play();
 
                     character.currentHealth -= (c.attack - character.weapon.defense);
                     c.currentHealth -= (character.weapon.attack - c.defense);
@@ -958,6 +979,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Rey");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -984,6 +1008,9 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key + 1 == character.position.Key && c.position.Value == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
 
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
@@ -1012,6 +1039,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Rey");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -1038,6 +1068,9 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
 
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
@@ -1066,6 +1099,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Rey");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -1092,6 +1128,9 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key - 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
 
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
@@ -1120,6 +1159,9 @@ public class LogicManager : MonoBehaviour
                     {
                         Debug.Log("Ataque Rey");
 
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
+
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
 
@@ -1146,6 +1188,9 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Key + 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
                     {
                         Debug.Log("Ataque Rey");
+
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
 
                         character.currentHealth -= (c.attack - character.weapon.defense);
                         c.currentHealth -= (character.weapon.attack - c.defense);
@@ -1176,7 +1221,15 @@ public class LogicManager : MonoBehaviour
 
         if (!c.dead)
         {
-            Vector3 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
+            Vector3 pos = new Vector3();
+            try
+            {
+                pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
+            }
+            catch
+            {
+                Debug.Log("a");
+            }
             //pos.y += 0.75f;
             room.board[c.position.Key, c.position.Value] = true;
             room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;

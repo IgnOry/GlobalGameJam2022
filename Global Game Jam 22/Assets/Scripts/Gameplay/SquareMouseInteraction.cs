@@ -59,7 +59,7 @@ public class SquareMouseInteraction : MonoBehaviour
 
             try
             {
-                c.currentHealth -= (en.attack - c.weapon.defense) * .25f;
+                //c.currentHealth -= (en.attack - c.weapon.defense) * .25f;
                 en.currentHealth -= (c.weapon.attack - en.defense);
             }
             catch
