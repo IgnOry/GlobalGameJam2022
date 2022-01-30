@@ -3328,6 +3328,8 @@ MonoBehaviour:
   waitingMove: 0
   waitingAttack: 0
   canAttack: 0
+  turnTime: 10
+  auxTime: 0
 --- !u!4 &1543302141
 Transform:
   m_ObjectHideFlags: 0
@@ -4252,6 +4254,10 @@ MonoBehaviour:
   AttDef: {fileID: 801356259}
   Range: {fileID: 2121732801}
   r: {fileID: 1537473761}
+  lm: {fileID: 1543302140}
+  lifeslider: {fileID: 38527536}
+  timeSlider: {fileID: 114670144}
+  timerText: {fileID: 312458727}
 --- !u!114 &1754863069
 MonoBehaviour:
   m_ObjectHideFlags: 0

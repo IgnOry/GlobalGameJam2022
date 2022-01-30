@@ -163,35 +163,54 @@ public class LogicManager : MonoBehaviour
     public bool waitingMove = false;
     public bool waitingAttack = false;
     public bool canAttack = false;
+
+    public float turnTime = 10.0f;
+    public float auxTime = 10.0f;
     IEnumerator processYourTurn()
     {
-        //Turn
+        auxTime = 10.0f;
 
-        //Change text to show the player it their turn
+        
+            //Change text to show the player it their turn
 
-        //Show posible moves
-        waitingMove = true;
-        playerAdjacencyColor();
+            //Show posible moves
+            waitingMove = true;
+            playerAdjacencyColor();
 
-        while (waitingMove)
+        //while (waitingMove)
+        //    yield return null;
+
+        while (auxTime > 0 && (waitingMove))
+        {
+            auxTime -= Time.deltaTime;
             yield return null;
+            //Turn
+        }
         //Attack if possible
         //If, checkWinCondition again
         resetPlayerAdjacencyColor();
 
+
         canAttack = playerAttackAdjacencyColor();
 
-        if (canAttack)
-        {
-            waitingAttack = true;
-            currentState = GameState.PlayerTurnAttack;
+            if (canAttack)
+            {
+                waitingAttack = true;
+                currentState = GameState.PlayerTurnAttack;
 
-            while (waitingAttack)
+            while (auxTime > 0 && (waitingAttack))
+            {
+                auxTime -= Time.deltaTime;
                 yield return null;
+                //Turn
+            }
+            //while (waitingAttack)
+            //    yield return null;
         }
-        resetPlayerAdjacencyColor();
+            resetPlayerAdjacencyColor();
 
-        yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(1.0f);
+        
         currentState = GameState.EnemyTurn;
         StartCoroutine(processEnemiesTurn());
 
@@ -985,7 +1004,14 @@ public class LogicManager : MonoBehaviour
                     {
                         c.currentHealth = 0;
                         c.Die();
-                        room.board[c.position.Key, c.position.Value] = false;
+                        try
+                        {
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
                 else //Get Close

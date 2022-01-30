@@ -17,6 +17,14 @@ public class UIController : MonoBehaviour
     Text Range;
     [SerializeField]
     Room r;
+    [SerializeField]
+    LogicManager lm;
+    [SerializeField]
+    Image lifeslider;
+    [SerializeField]
+    Image timeSlider;
+    [SerializeField]
+    Text timerText;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +42,11 @@ public class UIController : MonoBehaviour
             roundCounter.text = "ROUND " + r.round;
             AttDef.text = "Defense: " + player.weapon.defense;
             Range.text = "Attack: " + player.weapon.attack;
+            lifeslider.fillAmount = player.currentHealth / player.maxHealth;
+
+            timeSlider.fillAmount = lm.auxTime / lm.turnTime;
+
+            timerText.text = Mathf.Round(lm.auxTime).ToString() + " / " + lm.turnTime.ToString();
         }
     }
 }
