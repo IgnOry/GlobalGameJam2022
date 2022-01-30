@@ -254,7 +254,7 @@ public class Room : MonoBehaviour
         c.currentHealth = c.maxHealth;
 
         Vector3 pos = boardGameObjects[c.position.Key, c.position.Value].transform.position;
-        pos.y += 0.75f;
+        //pos.y += 0.75f;
         board[c.position.Key, c.position.Value] = true;
         c.transform.position = pos;
     }

@@ -41,7 +41,7 @@ public class SquareMouseInteraction : MonoBehaviour
             c.position = new KeyValuePair<int, int>(x, y);
 
             Vector3 pos = transform.position;
-            pos.y += 0.75f;
+            //pos.y += 0.75f;
             lM.room.board[c.position.Key, c.position.Value] = true;
 
             StartCoroutine(lM.lerpPosition(c.transform, pos));
@@ -61,18 +61,18 @@ public class SquareMouseInteraction : MonoBehaviour
             {
                 //c.currentHealth -= (en.attack - c.weapon.defense) * .25f;
                 en.currentHealth -= (c.weapon.attack - en.defense);
+                en.GetComponentInChildren<Slider>().value = en.currentHealth;
+
+                if (en.currentHealth <= 0)
+                {
+                    en.currentHealth = 0;
+                    en.Die();
+                    lM.room.board[en.position.Key, en.position.Value] = false;
+                }
             }
             catch
             {
                 Debug.Log("a");
-            }
-            en.GetComponentInChildren<Slider>().value = en.currentHealth;
-
-            if (en.currentHealth <= 0)
-            {
-                en.currentHealth = 0;
-                en.Die();
-                lM.room.board[en.position.Key, en.position.Value] = false;
             }
         }
         else

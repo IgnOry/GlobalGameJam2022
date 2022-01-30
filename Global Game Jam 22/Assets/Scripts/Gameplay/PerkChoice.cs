@@ -18,16 +18,25 @@ public class PerkChoice : MonoBehaviour
         switch (perk)
         {
             case Perks.AddLife:
+                aux = "Increases Max HP by 5. Stackable";
                 break;
             case Perks.AddMovement:
+                aux = "Increases Max movement by 1. Not Stackable";
                 break;
             case Perks.AddAtack:
+                aux = "Increases Attack by 1. Stackable";
                 break;
             case Perks.AddDefense:
+                aux = "Increases Defense by 1. Stackable";
                 break;
             case Perks.AddRange:
+                aux = "Increases Range by 1. Not Stackable";
                 break;
             case Perks.ReduceEnemyDefense:
+                aux = "Reduces Enemy Defense by 1. Stackable";
+                break;
+            case Perks.ReduceEnemyAttack:
+                aux = "Reduces Enemy Attack by 1. Stackable";
                 break;
         }
         gameObject.GetComponentInChildren<Text>().text = aux;

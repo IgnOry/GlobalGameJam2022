@@ -26,11 +26,11 @@ public class LogicManager : MonoBehaviour
     {
         perkPanel.gameObject.SetActive(true);
 
-        int perk1 = Random.Range(0, 6);
+        int perk1 = Random.Range(0, 7);
         int perk2 = perk1;
 
         while (perk2 == perk1)
-            perk2 = Random.Range(0, 6);
+            perk2 = Random.Range(0, 7);
 
         for (int i = 0; i < perkPanel.childCount - 1; i++)
         {
@@ -96,7 +96,7 @@ public class LogicManager : MonoBehaviour
         {
             while (myCoin.GetComponent<Animation>().isPlaying)
                 yield return null;
-            myCoin.GetComponent<Animation>().Play("CoinHeads");
+            myCoin.GetComponent<Animation>().Play("CoinTails");
             Debug.Log("Cruz");
             while (myCoin.GetComponent<Animation>().isPlaying)
                 yield return null;
@@ -118,7 +118,7 @@ public class LogicManager : MonoBehaviour
         {
             while (myCoin.GetComponent<Animation>().isPlaying)
                 yield return null;
-            myCoin.GetComponent<Animation>().Play("CoinTails");
+            myCoin.GetComponent<Animation>().Play("CoinHeads");
             Debug.Log("Cara");
             while (myCoin.GetComponent<Animation>().isPlaying)
                 yield return null;
@@ -570,11 +570,11 @@ public class LogicManager : MonoBehaviour
                 {
                     if (c.position.Key < character.position.Key)
                     {
-                        c.position = new KeyValuePair<int, int>(c.position.Key - 1, character.position.Value);
+                        c.position = new KeyValuePair<int, int>(character.position.Key - 1, character.position.Value);
                     }
                     else
                     {
-                        c.position = new KeyValuePair<int, int>(c.position.Key + 1, character.position.Value);
+                        c.position = new KeyValuePair<int, int>(character.position.Key + 1, character.position.Value);
                     }
 
                     Debug.Log("Ataque Torre");
@@ -927,7 +927,7 @@ public class LogicManager : MonoBehaviour
                 }
                 break;
             case EnemyClass.Queen:
-                if (c.position.Key == character.position.Key) //Attack
+                if (c.position.Key == character.position.Key) //Attack Horizontal
                 {
                     if (c.position.Value < character.position.Value)
                     {
@@ -955,7 +955,7 @@ public class LogicManager : MonoBehaviour
                         room.board[c.position.Key, c.position.Value] = false;
                     }
                 }
-                else if (c.position.Value == character.position.Value) //Attack
+                else if (c.position.Value == character.position.Value) //Attack Vertical
                 {
                     if (c.position.Key < character.position.Key)
                     {
@@ -985,11 +985,101 @@ public class LogicManager : MonoBehaviour
                 }
                 else //Get Close
                 {
-                    //Check diagonal
-                    
-
                     int distanceX;
                     int distanceY;
+                    auxX = 0;
+                    auxY = 0;
+                    while (!attack && i <= c.position.Value)//TopLeft
+                    {
+                        if (c.position.Key - i >= 0 && c.position.Value - i >= 0)
+                        {
+                            if (c.position.Key - i == character.position.Key && c.position.Value - i == character.position.Value)
+                            {
+                                attack = true;
+                                auxX = c.position.Key - i + 1;
+                                auxY = c.position.Value - i + 1;
+                            }
+                            else if (!room.board[c.position.Key - i, c.position.Value - i])
+                            {
+                                distanceX = Mathf.Abs((c.position.Key - i) - character.position.Key);
+                                distanceY = Mathf.Abs(c.position.Value - i - character.position.Value);
+                                KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - i, c.position.Value - i), distanceX + distanceY);
+                                posibleMoves.Add(entry);
+                            }
+                        }
+
+                        i++;
+                    }
+
+                    i = 1;
+                    while (!attack && i <= c.position.Key)//BotLeft
+                    {
+                        if (c.position.Key - i >= 0 && c.position.Value + i < room.size)
+                        {
+                            if (c.position.Key - i == character.position.Key && c.position.Value + i == character.position.Value)
+                            {
+                                attack = true;
+                                auxX = c.position.Key - i + 1;
+                                auxY = c.position.Value + i - 1;
+                            }
+
+                            else if (!room.board[c.position.Key - i, c.position.Value + i])
+                            {
+                                distanceX = Mathf.Abs((c.position.Key - i) - character.position.Key);
+                                distanceY = Mathf.Abs(c.position.Value + i - character.position.Value);
+                                KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value + 1), distanceX + distanceY);
+                                posibleMoves.Add(entry);
+                            }
+                        }
+
+                        i++;
+                    }
+
+                    i = 1;
+                    while (!attack && i <= (room.size - 1)) //TopRight
+                    {
+                        if (c.position.Key + i < room.size && c.position.Value - i >= 0)
+                        {
+                            if (c.position.Key + i == character.position.Key && c.position.Value - i == character.position.Value)
+                            {
+                                attack = true;
+                                auxX = c.position.Key + i - 1;
+                                auxY = c.position.Value - i + 1;
+                            }
+                            else if (!room.board[c.position.Key + i, c.position.Value - i])
+                            {
+                                distanceX = Mathf.Abs((c.position.Key + i) - character.position.Key);
+                                distanceY = Mathf.Abs(c.position.Value - i - character.position.Value);
+                                KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + i, c.position.Value - i), distanceX + distanceY);
+                                posibleMoves.Add(entry);
+                            }
+                        }
+                        i++;
+                    }
+
+                    i = 1;
+                    while (!attack && i <= (room.size - 1)) //BotRight
+                    {
+                        if (c.position.Key + i < room.size && c.position.Value + i < room.size)
+                        {
+                            if (c.position.Key + i == character.position.Key && c.position.Value + i == character.position.Value)
+                            {
+                                attack = true;
+                                auxX = c.position.Key + i - 1;
+                                auxY = c.position.Value + i - 1;
+                            }
+                            else if (!room.board[c.position.Key + i, c.position.Value + i])
+                            {
+                                 distanceX = Mathf.Abs((c.position.Key + i) - character.position.Key);
+                                distanceY = Mathf.Abs(c.position.Value + i - character.position.Value);
+                                KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + i, c.position.Value + i), distanceX + distanceY);
+                                posibleMoves.Add(entry);
+                            }
+                        }
+
+                        i++;
+                    }
+
                     int aux = room.size - 1;
 
                     for (i = 0; i < room.size; i++) //Horizontal
@@ -1017,9 +1107,39 @@ public class LogicManager : MonoBehaviour
                         }
                     }
 
-                    posibleMoves.Sort(Compare1);
+                    if (attack)
+                    {
+                        character.gameObject.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>("SFX/Defense Sound");
+                        character.gameObject.GetComponent<AudioSource>().Play();
 
-                    c.position = posibleMoves[0].Key;
+                        c.position = new KeyValuePair<int, int>(auxX, auxY);
+
+                        character.currentHealth -= (c.attack - character.weapon.defense);
+                        c.currentHealth -= (character.weapon.attack - c.defense);
+
+                        c.GetComponentInChildren<Slider>().value = c.currentHealth;
+
+                        if (c.currentHealth <= 0)
+                        {
+                            c.currentHealth = 0;
+                            c.Die();
+                            room.board[c.position.Key, c.position.Value] = false;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            posibleMoves.Sort(Compare1);
+                            c.position = posibleMoves[0].Key;
+                        }
+                        catch
+                        {
+                            Debug.Log("CHECK ERROR");
+                        }
+                    }
+
+
                 }
                 break;
             case EnemyClass.King:
