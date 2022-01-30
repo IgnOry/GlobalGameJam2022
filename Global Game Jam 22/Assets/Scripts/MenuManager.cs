@@ -96,9 +96,22 @@ public class MenuManager : MonoBehaviour
         settingsButton.GetComponent<Button>().enabled = false;
         creditsButton.GetComponent<Button>().enabled = false;
 
+        vanguardAxelIcon.GetComponent<Button>().enabled = true;
+        retaguardBoomerangIcon.GetComponent<Button>().enabled = true;
+        vanguardButton.GetComponent<Button>().enabled = true;
+        retaguardButton.GetComponent<Button>().enabled = true;
+
+        mainLogo.GetComponent<Animation>()["SwipeUpLogo"].time = 0.0f;
+        mainLogo.GetComponent<Animation>()["SwipeUpLogo"].speed = 1.0f;
         mainLogo.GetComponent<Animation>().Play("SwipeUpLogo");
+        playButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        playButton.GetComponent<Animation>()["SwipeDown"].speed = 1.0f;
         playButton.GetComponent<Animation>().Play("SwipeDown");
+        creditsButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        creditsButton.GetComponent<Animation>()["SwipeDown"].speed = 1.0f;
         creditsButton.GetComponent<Animation>().Play("SwipeDown");
+        settingsButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        settingsButton.GetComponent<Animation>()["SwipeDown"].speed = 1.0f;
         settingsButton.GetComponent<Animation>().Play("SwipeDown");
 
         vanguardAxelIcon.GetComponent<Animation>().Play("SwipeWeaponsIcon");
@@ -112,6 +125,10 @@ public class MenuManager : MonoBehaviour
     public void goSelectionVanguard()
     {
         isVanguard = true;
+
+        vanguardGauntletIcon.GetComponent<Button>().enabled = true;
+        offensiveButton.GetComponent<Button>().enabled = true;
+        defensiveButton.GetComponent<Button>().enabled = true;
 
         vanguardButton.GetComponent<Button>().enabled = false;
         retaguardButton.GetComponent<Button>().enabled = false;
@@ -142,6 +159,10 @@ public class MenuManager : MonoBehaviour
         vanguardAxelIcon.GetComponent<Button>().enabled = false;
         retaguardButton.GetComponent<Button>().enabled = false;
 
+        retaguardBoomerangIcon.GetComponent<Button>().enabled = true;
+        offensiveButton.GetComponent<Button>().enabled = true;
+        defensiveButton.GetComponent<Button>().enabled = true;
+
         vanguardAxelIcon.GetComponent<Animation>()["SwipeWeaponsIcon"].speed = -1;
         vanguardAxelIcon.GetComponent<Animation>()["SwipeWeaponsIcon"].time = retaguardBoomerangIcon.GetComponent<Animation>()["SwipeWeaponsIcon"].length;
         vanguardAxelIcon.GetComponent<Animation>().Play("SwipeWeaponsIcon");
@@ -168,12 +189,19 @@ public class MenuManager : MonoBehaviour
         creditsButton.GetComponent<Button>().enabled = false;
 
         mainLogo.GetComponent<Animation>()["SwipeUpLogo"].time = 0.0f;
+        mainLogo.GetComponent<Animation>()["SwipeUpLogo"].speed = 1;
         mainLogo.GetComponent<Animation>().Play("SwipeUpLogo");
+
         playButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        playButton.GetComponent<Animation>()["SwipeDown"].speed = 1;
         playButton.GetComponent<Animation>().Play("SwipeDown");
+
         creditsButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        creditsButton.GetComponent<Animation>()["SwipeDown"].speed = 1;
         creditsButton.GetComponent<Animation>().Play("SwipeDown");
+
         settingsButton.GetComponent<Animation>()["SwipeDown"].time = 0.0f;
+        settingsButton.GetComponent<Animation>()["SwipeDown"].speed = 1;
         settingsButton.GetComponent<Animation>().Play("SwipeDown");
 
         foreach (Transform child in creditsScreen.transform)
@@ -181,8 +209,10 @@ public class MenuManager : MonoBehaviour
             if(child.name != "BackToMainButton")
             {
                 child.gameObject.GetComponent<Animation>()[child.gameObject.GetComponent<Animation>().name + "Credits"].time = 0.0f;
+                child.gameObject.GetComponent<Animation>()[child.gameObject.GetComponent<Animation>().name + "Credits"].speed = 1.0f;
                 child.gameObject.GetComponent<Animation>().Play();
                 child.GetChild(0).GetComponent<Animation>()[child.GetComponent<Animation>().name + "Credits"].time = 0.0f;
+                child.GetChild(0).GetComponent<Animation>()[child.GetComponent<Animation>().name + "Credits"].speed = 1.0f;
                 child.GetChild(0).GetComponent<Animation>().Play();
             }
         }
