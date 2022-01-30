@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: b27bc708ac79a8f4ab316a7e68125c1f
+guid: 239b9d4ab9af67544baf7892aae83a0c
 ModelImporter:
   serializedVersion: 21100
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Chess
-    second: {fileID: 2100000, guid: 0cbb55ebfdc8f214b8417eed3a7415f7, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
