@@ -474,6 +474,7 @@ public class LogicManager : MonoBehaviour
                     if (c.position.Value == (room.size - 1))
                     {
                         c.enemyClass = EnemyClass.Queen;
+                        c.pawnToQueen();
                         Debug.Log("Peon -> Reina"); 
                     }
                 }
@@ -1176,7 +1177,7 @@ public class LogicManager : MonoBehaviour
         if (!c.dead)
         {
             Vector3 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
-            pos.y += 0.75f;
+            //pos.y += 0.75f;
             room.board[c.position.Key, c.position.Value] = true;
             room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
             //c.transform.position = pos;

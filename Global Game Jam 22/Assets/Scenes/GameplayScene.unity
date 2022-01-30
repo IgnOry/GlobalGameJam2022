@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2744,8 +2744,7 @@ MonoBehaviour:
   enemiesArray: []
   whiteBoardObjectPrefab: {fileID: 6262201924389936230, guid: a8b7e11b622fded4f830864cef0f88ad, type: 3}
   blackBoardObjectPrefab: {fileID: 4934224653051742347, guid: 253a17885f0b33b4591a2a04bb24e157, type: 3}
-  pawn: {fileID: 3637582243761287620, guid: 14e3303139dc597439e0fd95b94a76fd, type: 3}
-  bishop: {fileID: 950653718821123988, guid: c4dd8e7d6d7cd0541b7107b87f9929e5, type: 3}
+  enemy: {fileID: 3637582243761287620, guid: 14e3303139dc597439e0fd95b94a76fd, type: 3}
   defenseModifier: 0
   attackModifier: 0
 --- !u!4 &1537473762

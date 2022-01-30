@@ -20,9 +20,7 @@ public class Room : MonoBehaviour
     public GameObject blackBoardObjectPrefab;
 
     [SerializeField]
-    GameObject pawn;
-    [SerializeField]
-    GameObject bishop;
+    GameObject enemy;
 
     public int defenseModifier = 0;
     public int attackModifier = 0;
@@ -42,8 +40,8 @@ public class Room : MonoBehaviour
 
         for (int i = 0; i < enemiesArray.Length; i++)
         {
-            _en = Instantiate(pawn);
-            en = _en.AddComponent<Enemy>();
+            _en = Instantiate(enemy);
+            en = _en.GetComponent<Enemy>();
             enemiesArray[i] = _en;
 
             //Assign class
@@ -227,8 +225,10 @@ public class Room : MonoBehaviour
             board[en.position.Key, en.position.Value] = true;
 
             Vector3 pos = boardGameObjects[en.position.Key, en.position.Value].transform.position;
-            pos.y += 0.75f;
+            //pos.y += 0.75f;
             enemiesArray[i].transform.position = pos;
+            enemiesArray[i].transform.Rotate(new Vector3(-90, 0, 0));
+            enemiesArray[i].transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
             enemiesArray[i].transform.parent = EnemiesParent;
         }
     }
