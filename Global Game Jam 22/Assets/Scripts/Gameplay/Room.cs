@@ -44,7 +44,7 @@ public class Room : MonoBehaviour
             enemiesArray[i] = _en;
 
             //Assign class
-            en.enemyClass = EnemyClass.Pawn;
+            en.enemyClass = EnemyClass.Queen;
             en.setUpEnemy();
         }
 

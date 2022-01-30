@@ -442,6 +442,8 @@ public class LogicManager : MonoBehaviour
                 }           
                 break;
             case EnemyClass.Horse:
+
+
                 break;
             case EnemyClass.Bishop: //Review a little bit
                 bool attack = false;
@@ -570,47 +572,194 @@ public class LogicManager : MonoBehaviour
                 }
                 break;
             case EnemyClass.Queen:
-                //Any direction, as long as wanted
+                if (c.position.Key == character.position.Key) //Attack
+                {
+                    if (c.position.Value < character.position.Value)
+                    {
+                        c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value - 1);
+                    }
+                    else
+                    {
+                        c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value + 1);
+                    }
+                }
+                else if (c.position.Value == character.position.Value) //Attack
+                {
+                    if (c.position.Key < character.position.Key)
+                    {
+                        c.position = new KeyValuePair<int, int>(c.position.Key - 1, character.position.Value);
+                    }
+                    else
+                    {
+                        c.position = new KeyValuePair<int, int>(c.position.Key + 1, character.position.Value);
+                    }
+                }
+                else //Get Close
+                {
+                    //Check diagonal
+                    
+
+                    int distanceX;
+                    int distanceY;
+                    int aux = room.size - 1;
+
+                    for (i = 0; i < room.size; i++) //Horizontal
+                    {
+                        if (i != c.position.Key && !room.board[i, c.position.Value]) //Move is mandatory
+                        {
+                            distanceX = Mathf.Abs(i - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(i, c.position.Value), distanceX + distanceY);
+
+                            posibleMoves.Add(entry);
+                        }
+                    }
+                    for (i = 0; i < room.size; i++) //Vertical
+                    {
+                        if (i != c.position.Value && !room.board[c.position.Key, i]) //Move is mandatory
+                        {
+                            distanceX = Mathf.Abs(i - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key, i), distanceX + distanceY);
+
+                            posibleMoves.Add(entry);
+                        }
+                    }
+
+                    posibleMoves.Sort(Compare1);
+
+                    c.position = posibleMoves[0].Key;
+                }
                 break;
             case EnemyClass.King:
-                //1 square in any direction
-                int rand = Random.Range(0, 7);
+                int dX;
+                int dY;
 
-                switch (rand)
+                if (c.position.Key - 1 > 0) //Left
                 {
-                    case 0:
-                        if (c.position.Value > 0 && !room.board[c.position.Key, c.position.Value - 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key, c.position.Value - 1);
-                        break;
-                    case 1:
-                        if (c.position.Value < (room.size -1) && !room.board[c.position.Key, c.position.Value + 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key, c.position.Value + 1);
-                        break;
-                    case 2:
-                        if (c.position.Key < (room.size - 1) && !room.board[c.position.Key + 1, c.position.Value])
-                            c.position = new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value);
-                        break;
-                    case 3:
-                        if (c.position.Key > 0 && !room.board[c.position.Key - 1, c.position.Value])
-                            c.position = new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value);
-                        break;
-                    case 4:
-                        if (c.position.Key < (room.size - 1) && c.position.Value < (room.size - 1) && !room.board[c.position.Key + 1, c.position.Value + 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value + 1);
-                        break;
-                    case 5:
-                        if (c.position.Key > 0 && c.position.Value < (room.size - 1) && !room.board[c.position.Key - 1, c.position.Value + 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value + 1);
-                        break;
-                    case 6:
-                        if (c.position.Key > 0 && c.position.Value > 0 && !room.board[c.position.Key - 1, c.position.Value - 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value - 1);
-                        break;
-                    case 7:
-                        if (c.position.Key < (room.size - 1) && c.position.Value > 0 && !room.board[c.position.Key + 1, c.position.Value - 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value - 1);
-                        break;
+                    if (c.position.Key - 1 == character.position.Key && c.position.Value == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
+                        dY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
                 }
+                if (c.position.Key + 1 < (room.size-1)) //Right
+                {
+                    if (c.position.Key + 1 == character.position.Key && c.position.Value == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
+                        dY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Value - 1 > 0) //Top
+                {
+                    if (c.position.Key == character.position.Key && c.position.Value -1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs(c.position.Key - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Value + 1 < (room.size - 1)) //Bot
+                {
+                    if (c.position.Key == character.position.Key && c.position.Value + 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs(c.position.Key - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key - 1 > 0 && c.position.Value - 1 > 0) //LeftTop
+                {
+                    if (c.position.Key - 1 == character.position.Key && c.position.Value - 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value - 1), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key - 1 > 0 && c.position.Value + 1 < (room.size-1)) //LeftBot
+                {
+                    if (c.position.Key - 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key - 1) - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value + 1), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 1 < (room.size - 1) && c.position.Value - 1 > 0) //RightTop
+                {
+                    if (c.position.Key + 1 == character.position.Key && c.position.Value - 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value - 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value - 1), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+                if (c.position.Key + 1 < (room.size - 1) && c.position.Value + 1 < (room.size-1)) //RightBot
+                {
+                    if (c.position.Key + 1 == character.position.Key && c.position.Value + 1 == character.position.Value)
+                    {
+                        Debug.Log("Ataque Rey");
+                    }
+                    else
+                    {
+                        dX = Mathf.Abs((c.position.Key + 1) - character.position.Key);
+                        dY = Mathf.Abs((c.position.Value + 1) - character.position.Value);
+
+                        KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value + 1), dX + dY);
+                        posibleMoves.Add(entry);
+                    }
+                }
+
+                posibleMoves.Sort(Compare1);
+                c.position = posibleMoves[0].Key;
                 break;
         }
 
