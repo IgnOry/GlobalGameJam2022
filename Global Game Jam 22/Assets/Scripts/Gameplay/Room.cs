@@ -11,7 +11,7 @@ public class Room : MonoBehaviour
     public Transform EnemiesParent;
     
     int enemies;
-    int roomNumber = 0;
+    int roomNumber = 1;
 
     public int size;
     public GameObject[,] boardGameObjects;
@@ -39,10 +39,13 @@ public class Room : MonoBehaviour
 
         for (int i = 0; i < enemiesArray.Length; i++)
         {
-            _en = Instantiate(bishop);
+            _en = Instantiate(pawn);
             en = _en.AddComponent<Enemy>();
-            en.enemyClass = EnemyClass.King;
             enemiesArray[i] = _en;
+
+            //Assign class
+            en.enemyClass = EnemyClass.Pawn;
+            en.setUpEnemy();
         }
 
         SpawnEnemies();
@@ -80,7 +83,7 @@ public class Room : MonoBehaviour
 
                 boardGameObjects[i, j] = auxGO;
                 boardGameObjects[i, j].transform.parent = BoardParent;
-                boardGameObjects[i, j].transform.position = new Vector3(i, 0, j);
+                boardGameObjects[i, j].transform.position = new Vector3(i - size/2, 0, j - size/2);
                 boardGameObjects[i, j].GetComponent<SquareMouseInteraction>().setPosition(i, j);
                 aux++;
             }
@@ -106,7 +109,7 @@ public class Room : MonoBehaviour
                 while (board[xPos, 0])
                     xPos = Random.Range(0, size);
 
-                en.position = new KeyValuePair<int, int>(xPos, 1); //Always in second row (0 based)
+                en.position = new KeyValuePair<int, int>(xPos, 0); //Always in second row (0 based)
             }
 
             board[en.position.Key, en.position.Value] = true;
@@ -122,7 +125,6 @@ public class Room : MonoBehaviour
     {
         int xPos = Random.Range(0, size);
 
-        player = Instantiate(player);
         Character c = player.GetComponent<Character>();
         c.position = new KeyValuePair<int, int>(xPos, size - 1);
 
@@ -130,5 +132,27 @@ public class Room : MonoBehaviour
         pos.y += 0.75f;
         board[c.position.Key, c.position.Value] = true;
         c.transform.position = pos;
+    }
+
+    public void cleanUp()
+    {
+        for (int i = 0; i < enemiesArray.Length; i++)
+        {
+            Destroy(enemiesArray[i]);
+        }
+
+        enemiesArray = null;
+
+        for (int j = 0; j < size; j++)
+        {
+            for (int k = 0; k < size; k++)
+            {
+                Destroy(boardGameObjects[j, k]);
+            }
+        }
+
+        boardGameObjects = null;
+
+        player.transform.position = new Vector3(9999f, 9999f, 9999f);
     }
 }

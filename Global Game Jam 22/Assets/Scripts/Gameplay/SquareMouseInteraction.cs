@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events; //Needed for events
+using UnityEngine.UI;
 
 public class SquareMouseInteraction : MonoBehaviour
 {
     //[SerializeField] UnityEvent anEvent; // puts an easy to setup event in the inspector and anEvent references it so you can .Invoke() it
     LogicManager lM;
-
+    Character c;
+    public Enemy en = null;
     public Color ogColor;
 
     public bool selectable = false;
@@ -16,6 +18,7 @@ public class SquareMouseInteraction : MonoBehaviour
     {
         ogColor = GetComponent<Renderer>().material.GetColor("_Color");
         lM = GameObject.Find("LogicManager").GetComponent<LogicManager>();
+        c = lM.room.player.GetComponent<Character>();
     }
 
     public void setPosition(int x_, int y_)
@@ -34,32 +37,37 @@ public class SquareMouseInteraction : MonoBehaviour
             lM.waitingMove = false;
 
             //Player move
-            Character c = lM.room.player.GetComponent<Character>();
             lM.room.board[c.position.Key, c.position.Value] = false; //Set previous position to false
             c.position = new KeyValuePair<int, int>(x, y);
 
             Vector3 pos = transform.position;
             pos.y += 0.75f;
             lM.room.board[c.position.Key, c.position.Value] = true;
-            c.transform.position = pos;
+
+            StartCoroutine(lM.lerpPosition(c.transform, pos));
         }
         else if (lM.currentState == GameState.PlayerTurnAttack && lM.waitingAttack && selectable)
         {
             lM.waitingAttack = false;
             Debug.Log("ATAQUE");
-            ////Player move
-            //Character c = lM.room.player.GetComponent<Character>();
-            //lM.room.board[c.position.Key, c.position.Value] = false; //Set previous position to false
-            //c.position = new KeyValuePair<int, int>(x, y);
 
-            //Vector3 pos = transform.position;
-            //pos.y += 0.75f;
-            //lM.room.board[c.position.Key, c.position.Value] = true;
-            //c.transform.position = pos;
+            int playerAtt = c.weapon.attack;
+
+            c.currentHealth -= (en.attack - c.weapon.defense);
+            en.currentHealth -= (c.weapon.attack - en.defense);
+
+            en.GetComponentInChildren<Slider>().value = en.currentHealth;
+
+            if (en.currentHealth <= 0)
+            {
+                en.currentHealth = 0;
+                en.Die();
+                lM.room.board[en.position.Key, en.position.Value] = false;
+            }
         }
         else
         {
-            Debug.Log("estate quieto");
+            //Debug.Log("estate quieto");
         }
     }
 

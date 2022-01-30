@@ -27,10 +27,12 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
+    public WeaponEnum selectedWeapon;
+
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        
+        selectedWeapon = WeaponEnum.Axe;
     }
 
     // Update is called once per frame

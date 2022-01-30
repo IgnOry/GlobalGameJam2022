@@ -22,6 +22,8 @@ public class LogicManager : MonoBehaviour
         //Setup room battle
         room.SetUpRoom();
 
+        posibleMoves = new List<KeyValuePair<KeyValuePair<int, int>, int>>();
+
         //Thow Coin, depending on result
         //currentState = GameState.PlayerTurn;
         if (true)
@@ -34,7 +36,6 @@ public class LogicManager : MonoBehaviour
             //currentState = GameState.PlayerTurn;
             //StartCoroutine(processYourTurn());
         }
-
     }
 
     // Update is called once per frame
@@ -113,12 +114,14 @@ public class LogicManager : MonoBehaviour
 
         for (int i = 0; i < room.enemiesArray.Length; i++)
         {
-            //Enemy Turn
+            if (!room.enemiesArray[i].GetComponent<Enemy>().dead)
+            {
+                //Enemy Turn
 
-            //Move enemies
-            EnemyMovement(room.enemiesArray[i].GetComponent<Enemy>());
-            yield return new WaitForSeconds(0.5f);
-            //
+                //Move enemies
+                EnemyMovement(room.enemiesArray[i].GetComponent<Enemy>());
+                yield return new WaitForSeconds(0.5f);
+            }
         }
 
         yield return new WaitForSeconds(1.0f);
@@ -126,7 +129,9 @@ public class LogicManager : MonoBehaviour
         if (checkWinCondition())
         {
             currentState = GameState.Win;
-            //
+
+            Debug.Log("DE PUTOS LOCOS");
+            room.cleanUp();
         }
         else
         {
@@ -157,79 +162,87 @@ public class LogicManager : MonoBehaviour
 
         Color col = new Color(251, 68, 132);
 
-        //Base directions
-        if (c.position.Key < (room.size - 1))
+        for (int i = 1; i <= c.weapon.range; i++)
         {
-            if (room.board[c.position.Key + 1, c.position.Value])
+            //TopLeft
+            if (c.position.Key-i > 0 && c.position.Value-i > 0)
             {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key - i, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Key > 0)
-        {
-            if (room.board[c.position.Key - 1, c.position.Value])
+            //Top
+            if (c.position.Value - i > 0)
             {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Value < (room.size - 1))
-        {
-            if (room.board[c.position.Key, c.position.Value + 1])
+            //TopRight
+            if (c.position.Key + i < (room.size-1) && c.position.Value - i > 0)
             {
-                room.boardGameObjects[c.position.Key, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key + i, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Value > 0)
-        {
-            if (room.board[c.position.Key, c.position.Value - 1])
+            //Left
+            if (c.position.Key - i > 0)
             {
-                room.boardGameObjects[c.position.Key, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key - i, c.position.Value])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-
-        //Diagonal directions
-        if (c.position.Key < (room.size - 1) && c.position.Value < (room.size - 1))
-        {
-            if (room.board[c.position.Key + 1, c.position.Value + 1])
+            //Right
+            if (c.position.Key + i < (room.size-1))
             {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key + i, c.position.Value])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Key > 0 && c.position.Value < (room.size - 1))
-        {
-            if (room.board[c.position.Key - 1, c.position.Value + 1])
+            //BotLeft
+            if (c.position.Key - i > 0 && c.position.Value + i < (room.size-1))
             {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key - i, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Key > 0 && c.position.Value > 0)
-        {
-            if (room.board[c.position.Key - 1, c.position.Value - 1])
+            //Bot
+            if (c.position.Value + i < (room.size-1))
             {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
-        }
-        if (c.position.Key < (room.size - 1) && c.position.Value > 0)
-        {
-            if (room.board[c.position.Key + 1, c.position.Value - 1])
+            //BotRight
+            if (c.position.Key + i < (room.size - 1) && c.position.Value + i < (room.size-1))
             {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-                ret = true;
+                if (room.board[c.position.Key + i, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                    ret = true;
+                }
             }
         }
 
@@ -241,104 +254,128 @@ public class LogicManager : MonoBehaviour
         
         Color col = new Color(254, 153, 0);
 
-        //Base directions
-        if (c.position.Key < (room.size-1))
+        for (int i = 1; i <= c.movement; i++)
         {
-            if (!room.board[c.position.Key + 1, c.position.Value])
+            //TopLeft
+            if (c.position.Key - i >= 0 && c.position.Value - i >= 0)
             {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
+                if (!room.board[c.position.Key - i, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //Top
+            if (c.position.Value - i >= 0)
+            {
+                if (!room.board[c.position.Key, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //TopRight
+            if (c.position.Key + i < (room.size - 1) && c.position.Value - i >= 0)
+            {
+                if (!room.board[c.position.Key + i, c.position.Value - i])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value - i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value - i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //Left
+            if (c.position.Key - i >= 0)
+            {
+                if (!room.board[c.position.Key - i, c.position.Value])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //Right
+            if (c.position.Key + i < (room.size - 1))
+            {
+                if (!room.board[c.position.Key + i, c.position.Value])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //BotLeft
+            if (c.position.Key - i >= 0 && c.position.Value + i < (room.size - 1))
+            {
+                if (!room.board[c.position.Key - i, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key - i, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key - i, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //Bot
+            if (c.position.Value + i < (room.size - 1))
+            {
+                if (!room.board[c.position.Key, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
+            }
+            //BotRight
+            if (c.position.Key + i < (room.size - 1) && c.position.Value + i < (room.size - 1))
+            {
+                if (!room.board[c.position.Key + i, c.position.Value + i])
+                {
+                    room.boardGameObjects[c.position.Key + i, c.position.Value + i].GetComponent<SquareMouseInteraction>().changeColor(col);
+                    room.boardGameObjects[c.position.Key + i, c.position.Value + i].GetComponent<SquareMouseInteraction>().selectable = true;
+                }
             }
         }
-        if (c.position.Key > 0)
-        {
-            if (!room.board[c.position.Key - 1, c.position.Value])
-            {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-        if (c.position.Value < (room.size - 1))
-        {
-            if (!room.board[c.position.Key, c.position.Value + 1])
-            {
-                room.boardGameObjects[c.position.Key, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-        if (c.position.Value > 0)
-        {
-            if (!room.board[c.position.Key, c.position.Value - 1])
-            {
-                room.boardGameObjects[c.position.Key, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-
-        //Diagonal directions
-        if (c.position.Key < (room.size - 1) && c.position.Value < (room.size - 1))
-        {
-            if (!room.board[c.position.Key + 1, c.position.Value + 1])
-            {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-        if (c.position.Key > 0 && c.position.Value < (room.size -1))
-        {
-            if (!room.board[c.position.Key - 1, c.position.Value + 1])
-            {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value + 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-        if (c.position.Key > 0 && c.position.Value > 0)
-        {
-            if (!room.board[c.position.Key - 1, c.position.Value - 1])
-            {
-                room.boardGameObjects[c.position.Key - 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key - 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }
-        if (c.position.Key < (room.size - 1) && c.position.Value > 0)
-        {
-            if (!room.board[c.position.Key + 1, c.position.Value - 1])
-            {
-                room.boardGameObjects[c.position.Key + 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().changeColor(col);
-                room.boardGameObjects[c.position.Key + 1, c.position.Value - 1].GetComponent<SquareMouseInteraction>().selectable = true;
-            }
-        }        
     }
 
+    static int Compare1(KeyValuePair<KeyValuePair<int, int>, int> a, KeyValuePair<KeyValuePair<int, int>, int> b)
+    {
+        return a.Value.CompareTo(b.Value);
+    }
+
+    List<KeyValuePair<KeyValuePair<int, int>, int>> posibleMoves;
     public void EnemyMovement (Enemy c)
     {
-        int minDistanceToEdgeX;
-        int minDistanceToEdgeY;
-        int aux = room.size - 1;
-
-        if (aux - c.position.Key > c.position.Key)
-            minDistanceToEdgeX = c.position.Key;
-        else
-            minDistanceToEdgeX = aux - c.position.Key;
-
-        if (aux - c.position.Value > c.position.Value)
-            minDistanceToEdgeY = c.position.Value;
-        else
-            minDistanceToEdgeY = aux - c.position.Value;
+        Character character = room.player.GetComponent<Character>();
+        int i = 0; //aux
+        int dist1X = c.position.Key;
+        int dist2X = (room.size - 1) - c.position.Key;
+        int dist1Y = c.position.Value;
+        int dist2Y = (room.size - 1) - c.position.Value;
 
         room.board[c.position.Key, c.position.Value] = false; //Set current position to false
+        room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = null;
 
+        posibleMoves.Clear();
+        //List<KeyValuePair<KeyValuePair<int, int>, int> posibleMoves; //<PosX, Posy>, Distance
 
         switch (c.enemyClass)
         {
             case EnemyClass.Pawn:
                 //If player is diagonally forward -> Attack
-
-                if (c.position.Value < (room.size -1))
+                if (c.position.Value + 1 == character.position.Value)
+                {
+                    if (c.position.Key - 1 == character.position.Key)
+                    {
+                        Debug.Log("Ataque Peon");
+                    }
+                    else if (c.position.Key + 1 == character.position.Key)
+                    {
+                        Debug.Log("Ataque Peon");
+                    }
+                }
+                else if (c.position.Value < (room.size - 1))
                 {
                     if (!room.board[c.position.Key, c.position.Value + 1])
-                    c.position = new KeyValuePair<int, int>(c.position.Key, c.position.Value + 1);
+                        c.position = new KeyValuePair<int, int>(c.position.Key, c.position.Value + 1);
+
+                    if (c.position.Value == (room.size - 1))
+                        Debug.Log("Peon -> Reina");
                 }
+
                 //Else, move forward
 
                 //If reach the board's end, change to Queen
@@ -346,51 +383,191 @@ public class LogicManager : MonoBehaviour
             case EnemyClass.Tower:
                 //Move horizontal o vertical
 
-                int hor = Random.Range(0, 1);
-                //Vertical
-                if (hor == 0)
+                if (c.position.Key == character.position.Key) //Attack
                 {
-                    if (c.position.Value < (room.size - 1))
+                    if (c.position.Value < character.position.Value)
                     {
-                        if (!room.board[c.position.Key, room.size - 1])
-                            c.position = new KeyValuePair<int, int>(c.position.Key, room.size - 1);
+                        c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value-1);
                     }
                     else
                     {
-                        if (!room.board[c.position.Key, 0])
-                            c.position = new KeyValuePair<int, int>(c.position.Key, 0);
+                        c.position = new KeyValuePair<int, int>(c.position.Key, character.position.Value + 1);
                     }
                 }
-                else
+                else if (c.position.Value == character.position.Value) //Attack
                 {
-                    //Horizontal
-                    if (c.position.Key < (room.size - 1))
+                    if (c.position.Key < character.position.Key)
                     {
-                        if (!room.board[room.size - 1, c.position.Value])
-                            c.position = new KeyValuePair<int, int>(room.size - 1, c.position.Value);
+                        c.position = new KeyValuePair<int, int>(c.position.Key - 1, character.position.Value);
                     }
                     else
                     {
-                        if (!room.board[0, c.position.Value])
-                            c.position = new KeyValuePair<int, int>(0, c.position.Value);
+                        c.position = new KeyValuePair<int, int>(c.position.Key + 1, character.position.Value);
                     }
                 }
+                else //Get Close
+                {
+                    int distanceX;
+                    int distanceY;
+                    int aux = room.size - 1;
+
+                    for (i = 0; i < room.size; i++) //Horizontal
+                    {
+                        if (i != c.position.Key && !room.board[i, c.position.Value]) //Move is mandatory
+                        {
+                            distanceX = Mathf.Abs(i - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(i, c.position.Value), distanceX+distanceY);
+
+                            posibleMoves.Add(entry);
+                        }
+                    }
+                    for (i = 0; i < room.size; i++) //Vertical
+                    {
+                        if (i != c.position.Value && !room.board[c.position.Key, i]) //Move is mandatory
+                        {
+                            distanceX = Mathf.Abs(i - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - character.position.Value);
+
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key, i), distanceX + distanceY);
+
+                            posibleMoves.Add(entry);
+                        }
+                    }
+
+                    posibleMoves.Sort(Compare1);
+
+                    c.position = posibleMoves[0].Key;
+                }           
                 break;
             case EnemyClass.Horse:
                 break;
-            case EnemyClass.Bishop:
+            case EnemyClass.Bishop: //Review a little bit
+                bool attack = false;
 
-                if (c.position.Value < (room.size-1) && c.position.Key < (room.size-1))
+                int auxX = 0;
+                int auxY = 0;
+
+                i = 1;
+                while (!attack && i <= c.position.Value)//TopLeft
                 {
-                    if (!room.board[c.position.Key + 1, c.position.Value + 1])
-                        c.position = new KeyValuePair<int, int>(c.position.Key + 1, c.position.Value + 1);
+                    if (c.position.Key - i >= 0 && c.position.Value - i >= 0)
+                    {
+                        if (c.position.Key - i == character.position.Key && c.position.Value - i == character.position.Value)
+                        {
+                            attack = true;
+                            auxX = c.position.Key - i + 1;
+                            auxY = c.position.Value - i + 1;
+                        }
+                        else if (!room.board[c.position.Key - i, c.position.Value - i])
+                        {
+                            int distanceX;
+                            int distanceY;
+
+                            distanceX = Mathf.Abs((c.position.Key - i) - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - i - character.position.Value);
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - i, c.position.Value - i), distanceX + distanceY);
+                            posibleMoves.Add(entry);
+                        }
+                    }
+
+                    i++;
                 }
-                else if (c.position.Value > 0 && c.position.Key > 0)
+
+                i = 1;
+                while (!attack && i <= c.position.Key)//BotLeft
                 {
-                    if (!room.board[c.position.Key - 1, c.position.Value - 1])
-                        c.position = new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value - 1);
+                    if (c.position.Key - i >= 0 && c.position.Value + i < room.size)
+                    {
+                        if (c.position.Key - i == character.position.Key && c.position.Value + i == character.position.Value)
+                        {
+                            attack = true;
+                            auxX = c.position.Key - i + 1;
+                            auxY = c.position.Value + i - 1;
+                        }
+
+                        else if (!room.board[c.position.Key - i, c.position.Value + i])
+                        {
+                            int distanceX;
+                            int distanceY;
+
+                            distanceX = Mathf.Abs((c.position.Key - i) - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value + i - character.position.Value);
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key - 1, c.position.Value + 1), distanceX + distanceY);
+                            posibleMoves.Add(entry);
+                        }
+                    }
+
+                    i++;
                 }
-                //Check diagonal -> Get to the player's closest square 
+
+                i = 1;
+                while (!attack && i <= (room.size - 1)) //TopRight
+                {
+                    if (c.position.Key + i < room.size && c.position.Value - i >= 0)
+                    {
+                        if (c.position.Key + i == character.position.Key && c.position.Value - i == character.position.Value)
+                        {
+                            attack = true;
+                            auxX = c.position.Key + i - 1;
+                            auxY = c.position.Value - i +1;
+                        }
+                        else if (!room.board[c.position.Key + i, c.position.Value - i])
+                        {
+                            int distanceX;
+                            int distanceY;
+
+                            distanceX = Mathf.Abs((c.position.Key + i) - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value - i - character.position.Value);
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + i, c.position.Value - i), distanceX + distanceY);
+                            posibleMoves.Add(entry);
+                        }
+                    }
+                    i++;
+                }
+
+                i = 1;
+                while (!attack && i <= (room.size - 1)) //BotRight
+                {
+                    if (c.position.Key + i < room.size && c.position.Value + i < room.size)
+                    {
+                        if (c.position.Key + i == character.position.Key && c.position.Value + i == character.position.Value)
+                        {
+                            attack = true;
+                            auxX = c.position.Key + i - 1;
+                            auxY = c.position.Value + i - 1;
+                        }
+                        else if (!room.board[c.position.Key + i, c.position.Value + i])
+                        {
+                            int distanceX;
+                            int distanceY;
+
+                            distanceX = Mathf.Abs((c.position.Key + i) - character.position.Key);
+                            distanceY = Mathf.Abs(c.position.Value + i - character.position.Value);
+                            KeyValuePair<KeyValuePair<int, int>, int> entry = new KeyValuePair<KeyValuePair<int, int>, int>(new KeyValuePair<int, int>(c.position.Key + i, c.position.Value + i), distanceX + distanceY);
+                            posibleMoves.Add(entry);
+                        }
+                    }
+
+                    i++;
+                }
+
+                posibleMoves.Sort(Compare1);
+
+                if (attack)
+                    c.position = new KeyValuePair<int, int>(auxX, auxY);
+                else
+                {
+                    try
+                    {
+                        c.position = posibleMoves[0].Key;
+                    }
+                    catch
+                    {
+                        Debug.Log("CHECK ERROR");
+                    }
+                }
                 break;
             case EnemyClass.Queen:
                 //Any direction, as long as wanted
@@ -440,6 +617,24 @@ public class LogicManager : MonoBehaviour
         Vector3 pos = room.boardGameObjects[c.position.Key, c.position.Value].transform.position;
         pos.y += 0.75f;
         room.board[c.position.Key, c.position.Value] = true;
-        c.transform.position = pos;
+        room.boardGameObjects[c.position.Key, c.position.Value].GetComponent<SquareMouseInteraction>().en = c;
+        //c.transform.position = pos;
+
+        StartCoroutine(lerpPosition(c.transform, pos));
+    }
+
+    public IEnumerator lerpPosition(Transform t, Vector3 endPos, float waitTime = 1.5f)
+    {
+        float auxTime = 0.0f;
+
+        while (auxTime < waitTime)
+        {
+            t.position = Vector3.Lerp(t.position, endPos, auxTime/waitTime);
+            auxTime += Time.deltaTime;
+            yield return null;
+        }
+
+        t.position = endPos;
+        yield return null;
     }
 }
