@@ -233,6 +233,17 @@ public class Room : MonoBehaviour
         }
     }
 
+    public void updateEnemyStats()
+    {
+        for (int i = 0; i < enemiesArray.Length; i++)
+        {
+            Enemy en = enemiesArray[i].GetComponent<Enemy>();
+
+            en.defense += defenseModifier;
+            en.attack += attackModifier;
+        }
+    }
+
     public void SpawnPlayer()
     {
         int xPos = Random.Range(0, size);

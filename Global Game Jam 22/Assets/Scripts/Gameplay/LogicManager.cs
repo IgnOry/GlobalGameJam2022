@@ -31,8 +31,6 @@ public class LogicManager : MonoBehaviour
         while (perk2 == perk1)
             perk2 = Random.Range(0, 6);
 
-        perk1 = 0;
-
         for (int i = 0; i < perkPanel.childCount - 1; i++)
         {
             perkPanel.GetChild(i).gameObject.SetActive(true);
@@ -55,8 +53,7 @@ public class LogicManager : MonoBehaviour
     {
         perkPanel.gameObject.SetActive(true);
 
-        //int perk1 = Random.Range(7, 13);
-        int perk1 = 0;
+        int perk1 = Random.Range(7, 13);
 
         perkPanel.GetChild(2).gameObject.SetActive(true);
         PerkChoice pC = perkPanel.GetChild(2).GetComponent<PerkChoice>();
