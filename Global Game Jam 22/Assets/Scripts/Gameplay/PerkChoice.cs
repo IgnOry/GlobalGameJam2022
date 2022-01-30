@@ -40,98 +40,174 @@ public class PerkChoice : MonoBehaviour
 
         switch (perk)
         {
+            //Advantage
             case Perks.AddLife:
-
-                if (c.perks.TryGetValue(perk, out aux))
+                if (c.perks.ContainsKey(perk))
                 {
-                    if (aux < 5)
-                    {
-                        c.perks.Remove(perk);
-                        c.perks.Add(perk, aux++);
-                        c.maxHealth += 5;
-                    }
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
                 }
                 else
                 {
-                    c.maxHealth += 5;
-                    c.perks.Add(perk, 1);
+                    c.perks.Add(perk, -1);
                 }
                 break;
             case Perks.AddMovement:
-                aux = -1;
-
-                if (c.perks.TryGetValue(perk, out aux))
-                {
-                    if (c.movement < 3)
-                    {
-                        c.perks.Remove(perk);
-                        c.perks.Add(perk, aux++);
-                        c.movement++;
-                    }
-                    //Not else for movement == 2 because it already caps at 3
-                }
-                else
-                {
-                    c.movement ++;
-                    c.perks.Add(perk, 1);
-                }
+                
                 break;
             case Perks.AddAtack:
-                if (c.perks.TryGetValue(perk, out aux))
+                if (c.perks.ContainsKey(perk))
                 {
-                        c.perks.Remove(perk);
-                        c.perks.Add(perk, aux++);
-                        c.weapon.attack++;
-                    //Not else for movement == 2 because it already caps at 3
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
                 }
                 else
                 {
-                    c.weapon.attack++;
                     c.perks.Add(perk, 1);
                 }
                 break;
             case Perks.AddDefense:
-                if (c.perks.TryGetValue(perk, out aux))
+                if (c.perks.ContainsKey(perk))
                 {
+                    aux = c.perks[perk];
                     c.perks.Remove(perk);
-                    c.perks.Add(perk, aux++);
-                    c.weapon.defense++;
-                    //Not else for movement == 2 because it already caps at 3
+                    aux++;
+                    c.perks.Add(perk, aux);
                 }
                 else
                 {
-                    c.weapon.defense++;
                     c.perks.Add(perk, 1);
                 }
                 break;
             case Perks.AddRange:
-                aux = -1;
-
-                if (c.perks.TryGetValue(perk, out aux))
+                if (c.perks.ContainsKey(perk))
                 {
-                    if (c.weapon.range < 3)
+                    aux = c.perks[perk];
+                    if (aux < 2)
                     {
                         c.perks.Remove(perk);
-                        c.perks.Add(perk, aux++);
-                        c.weapon.range++;
+                        aux++;
+                        c.perks.Add(perk, aux);
                     }
-                    //Not else for movement == 2 because it already caps at 3
                 }
                 else
                 {
-                    c.weapon.range++;
                     c.perks.Add(perk, 1);
                 }
                 break;
-            case Perks.ReduceEnemyDefense:
-                lm.room.defenseModifier--;
+            case Perks.ReduceEnemyDefense: //Update enemies
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, 1);
+                }
                 break;
-            case Perks.ReduceEnemyAttack:
-                lm.room.attackModifier--;
+            case Perks.ReduceEnemyAttack: //Update enemies
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, 1);
+                }
+                break;
+            //Disadvantage
+            case Perks.HalfLife:
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, 1);
+                }
+                break;
+            case Perks.Movement1:
+
+                break;
+            case Perks.LessDefense: //Counter
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, -1);
+                }
+                break;
+            case Perks.LessRange: //Counter
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, -1);
+                }
+                break;
+            case Perks.IncreaseEnemyDefense: //Counter
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, -1);
+                }
+                break;
+            case Perks.IncreaseEnemyAttack: //Counter
+                if (c.perks.ContainsKey(perk))
+                {
+                    aux = c.perks[perk];
+                    c.perks.Remove(perk);
+                    aux++;
+                    c.perks.Add(perk, aux);
+                }
+                else
+                {
+                    c.perks.Add(perk, -1);
+                }
+                break;
+            case Perks.SwapAttackDefense:
+                if (c.perks.ContainsKey(perk))
+                {                   
+                    c.perks.Remove(perk);
+                }
+                else
+                {
+                    c.perks.Add(perk, 1);
+                }
                 break;
         }
 
         lm.chosen = true;
 
+        gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
     }
 }

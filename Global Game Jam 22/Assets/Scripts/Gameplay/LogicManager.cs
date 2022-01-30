@@ -31,11 +31,16 @@ public class LogicManager : MonoBehaviour
         while (perk2 == perk1)
             perk2 = Random.Range(0, 6);
 
-        for (int i = 0; i < perkPanel.childCount; i++)
+        perk1 = 0;
+
+        for (int i = 0; i < perkPanel.childCount - 1; i++)
         {
             perkPanel.GetChild(i).gameObject.SetActive(true);
 
-            PerkChoice pC = perkPanel.GetChild(i).gameObject.AddComponent<PerkChoice>();
+            PerkChoice pC = perkPanel.GetChild(i).GetComponent<PerkChoice>();
+
+            if (pC == null)
+                pC = perkPanel.GetChild(i).gameObject.AddComponent<PerkChoice>();
 
             if (i == 0)
                 pC.setPerk(perk1);
@@ -44,6 +49,24 @@ public class LogicManager : MonoBehaviour
 
             perkPanel.GetChild(i).GetComponent<Button>().onClick.AddListener(pC.onClick);
         }
+    }
+
+    void setUpNegativePerk()
+    {
+        perkPanel.gameObject.SetActive(true);
+
+        //int perk1 = Random.Range(7, 13);
+        int perk1 = 0;
+
+        perkPanel.GetChild(2).gameObject.SetActive(true);
+        PerkChoice pC = perkPanel.GetChild(2).GetComponent<PerkChoice>();
+
+        if (pC == null)
+            pC = perkPanel.GetChild(2).gameObject.AddComponent<PerkChoice>();
+
+        pC.setPerk(perk1);
+
+        perkPanel.GetChild(2).GetComponent<Button>().onClick.AddListener(pC.onClick);
     }
 
     public bool chosen = false;
@@ -68,8 +91,16 @@ public class LogicManager : MonoBehaviour
         if (coin > 50)
         {
             Debug.Log("Cruz");
-
+            setUpNegativePerk();
             //Desventaja
+
+            while (!chosen)
+                yield return null;
+
+            for (int i = 0; i < perkPanel.childCount; i++)
+            {
+                perkPanel.GetChild(i).gameObject.SetActive(false);
+            }
 
             currentState = GameState.EnemyTurn;
             StartCoroutine(processEnemiesTurn());

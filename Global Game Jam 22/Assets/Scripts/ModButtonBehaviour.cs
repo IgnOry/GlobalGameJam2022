@@ -8,10 +8,80 @@ public class ModButtonBehaviour : MonoBehaviour
     private bool isVisible = false;
     private bool CR_running = false;
 
+    public GameObject mod1;
+    public GameObject mod2;
+    public void setModifiers()
+    {
+        Dictionary<Perks, int> aux = GameObject.Find("Player").GetComponent<Character>().perks;
+
+        GameObject auxGO;
+
+        for (int i = 0; i < transform.GetChild(0).childCount; i++)
+        {
+            Destroy(transform.GetChild(0).GetChild(0).gameObject);
+        }
+
+        foreach (KeyValuePair<Perks, int> p in aux)
+        {
+            auxGO = Instantiate(mod1, transform.GetChild(0));
+
+            string t = "";
+
+            switch (p.Key)
+            {
+                case Perks.AddLife:
+                    t = "Max HP increased by " + 5 * p.Value;
+                    break;
+                case Perks.AddMovement:
+                    t = "Movement increased by " + p.Value;
+                    break;
+                case Perks.AddAtack:
+                    t = "Attack increased by " + p.Value;
+                    break;
+                case Perks.AddDefense:
+                    t = "Defense increased by " + p.Value;
+                    break;
+                case Perks.AddRange:
+                    t = "Range increased by " + p.Value;
+                    break;
+                case Perks.ReduceEnemyDefense:
+                    t = "Enemy defense reduced by " + p.Value;
+                    break;
+                case Perks.ReduceEnemyAttack:
+                    t = "Enemy attack reduced by " + p.Value;
+                    break;
+                case Perks.HalfLife:
+                    t = "Max HP halved";
+                    break;
+                case Perks.Movement1:
+                    t = "Movement reduced";
+                    break;
+                case Perks.LessDefense:
+                    t = "Defense reduced by " + p.Value;
+                    break;
+                case Perks.LessRange:
+                    t = "Range reduced by " + p.Value;
+                    break;
+                case Perks.IncreaseEnemyDefense:
+                    t = "Enemy defense increased by " + p.Value;
+                    break;
+                case Perks.IncreaseEnemyAttack:
+                    t = "Enemy attack increased by " + p.Value;
+                    break;
+                case Perks.SwapAttackDefense:
+                    t = "Attack and defense swaped";
+                    break;
+            }
+
+            auxGO.GetComponentInChildren<Text>().text = t;
+        }
+    }
+
     public void ChangeVisibility()
     {
         if (!isVisible && !CR_running)
         {
+            setModifiers();
             StartCoroutine(FadeTo(1.0f, 0.5f));
             isVisible = true;
             gameObject.GetComponent<Button>().enabled = false;

@@ -5,7 +5,7 @@ using UnityEngine;
 public enum WeaponEnum {Axe, Shurikens, Gauntlets, Boomerang };
 
 //0 - 6 positive, 7 - 11 negative
-public enum Perks { AddLife, AddMovement, AddAtack, AddDefense, AddRange, ReduceEnemyDefense, ReduceEnemyAttack, HalfLife, Movement1, LessDefense, LessRange, IncreaseEnemyDefense, SwapAttackDefense };
+public enum Perks { AddLife, AddMovement, AddAtack, AddDefense, AddRange, ReduceEnemyDefense, ReduceEnemyAttack, HalfLife, Movement1, LessDefense, LessRange, IncreaseEnemyDefense, IncreaseEnemyAttack, SwapAttackDefense };
 public class Character : MonoBehaviour
 {
     public KeyValuePair<int, int> position; //X, Y
