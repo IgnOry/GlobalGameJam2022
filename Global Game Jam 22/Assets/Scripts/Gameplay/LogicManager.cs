@@ -262,6 +262,11 @@ public class LogicManager : MonoBehaviour
             for (int i = 0; i < gO.transform.childCount; i++)
             {
                 gO.transform.GetChild(i).GetComponentInChildren<Animation>().Play("SimpleFadeIn");
+                if (i == 1 || i == 2)
+                {
+                    gO.transform.GetChild(i).GetChild(0).GetComponent<Animation>().Play("SimpleFadeIn");
+                    gO.transform.GetChild(i).GetComponent<Button>().enabled = true;
+                }
             }
         }
     }
