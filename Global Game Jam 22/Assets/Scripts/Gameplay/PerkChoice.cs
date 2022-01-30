@@ -182,6 +182,7 @@ public class PerkChoice : MonoBehaviour
                     c.perks.Add(perk, 1);
                 }
                 c.maxHealth = c.maxHealth / 2;
+                c.currentHealth = c.maxHealth;
                 break;
             case Perks.Movement1: //Done
                 if (c.perks.ContainsKey(Perks.AddMovement))
@@ -197,10 +198,10 @@ public class PerkChoice : MonoBehaviour
             case Perks.LessDefense: //Done
                 if (c.perks.ContainsKey(Perks.AddDefense))
                 {
-                    aux = c.perks[perk];
-                    c.perks.Remove(perk);
+                    aux = c.perks[Perks.AddDefense];
+                    c.perks.Remove(Perks.AddDefense);
                     aux--;
-                    c.perks.Add(perk, aux);
+                    c.perks.Add(Perks.AddDefense, aux);
                 }
                 else
                 {
@@ -209,9 +210,9 @@ public class PerkChoice : MonoBehaviour
                 c.weapon.defense--;
                 break;
             case Perks.LessRange: //Done
-                if (c.perks.ContainsKey(perk))
+                if (c.perks.ContainsKey(Perks.AddRange))
                 {
-                    c.perks.Remove(perk);
+                    c.perks.Remove(Perks.AddRange);
                     c.weapon.range--;
                 }
                 else
@@ -221,14 +222,14 @@ public class PerkChoice : MonoBehaviour
             case Perks.IncreaseEnemyDefense: //Done
                 if (c.perks.ContainsKey(Perks.ReduceEnemyDefense))
                 {
-                    aux = c.perks[perk];
-                    c.perks.Remove(perk);
+                    aux = c.perks[Perks.ReduceEnemyDefense];
+                    c.perks.Remove(Perks.ReduceEnemyDefense);
                     aux--;
-                    c.perks.Add(perk, aux);
+                    c.perks.Add(Perks.ReduceEnemyDefense, aux);
                 }
                 else
                 {
-                    c.perks.Add(perk, -1);
+                    c.perks.Add(Perks.ReduceEnemyDefense, -1);
                 }
                 lm.room.defenseModifier++;
                 lm.room.updateEnemyStats();
@@ -236,14 +237,14 @@ public class PerkChoice : MonoBehaviour
             case Perks.IncreaseEnemyAttack: //Done
                 if (c.perks.ContainsKey(Perks.ReduceEnemyAttack))
                 {
-                    aux = c.perks[perk];
-                    c.perks.Remove(perk);
+                    aux = c.perks[Perks.ReduceEnemyAttack];
+                    c.perks.Remove(Perks.ReduceEnemyAttack);
                     aux--;
-                    c.perks.Add(perk, aux);
+                    c.perks.Add(Perks.ReduceEnemyAttack, aux);
                 }
                 else
                 {
-                    c.perks.Add(perk, -1);
+                    c.perks.Add(Perks.ReduceEnemyAttack, -1);
                 }
                 lm.room.attackModifier++;
                 lm.room.updateEnemyStats();

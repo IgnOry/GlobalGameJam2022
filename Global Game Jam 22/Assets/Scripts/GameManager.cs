@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     //Singleton pattern
     static private GameManager _instance;
-
+    static int maxRounds;
     static public GameManager GetInstance()
     {
         if (_instance == null)
@@ -23,9 +23,31 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(go);
         }
 
+        if (PlayerPrefs.HasKey("MaxRound"))
+        {
+            maxRounds = PlayerPrefs.GetInt("MaxRounds");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("MaxRound", 0);
+            maxRounds = PlayerPrefs.GetInt("MaxRounds");
+        }
         // devolvemos la instancia
         // si no existia, en este punto ya la habra creado
         return _instance;
+    }
+
+    public void endGameUpdateMax(int x)
+    {
+        if (x > maxRounds)
+        {
+            PlayerPrefs.SetInt("MaxRounds", x);
+        }
+    }
+
+    public int getMaxRounds()
+    {
+        return maxRounds;
     }
 
     public WeaponEnum selectedWeapon;

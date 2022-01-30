@@ -30,6 +30,8 @@ public class Room : MonoBehaviour
         BoardParent = transform.GetChild(0);
         EnemiesParent = transform.GetChild(1);
 
+        size = getSize();
+
         enemies = getEnemies();
         SetupBoard();
 
@@ -58,6 +60,29 @@ public class Room : MonoBehaviour
         SpawnPlayer();
     }
 
+    int getSize()
+    {
+        if (round == 1)
+        {
+            return 3;
+        }
+        else if (round < 6)
+        {
+            return 5;
+        }
+        else if (round < 11)
+        {
+            return 7;
+        }
+        else if (round < 16)
+        {
+            return 9;
+        }
+        else
+        {
+            return 11;
+        }
+    }
     void setEnemyClass(Enemy en)
     {
         int random = Random.Range(0, 100);

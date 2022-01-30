@@ -9,6 +9,14 @@ public class UIController : MonoBehaviour
     Character player;
     [SerializeField]
     Text lifeText;
+    [SerializeField]
+    Text roundCounter;
+    [SerializeField]
+    Text AttDef;
+    [SerializeField]
+    Text Range;
+    [SerializeField]
+    Room r;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +28,12 @@ public class UIController : MonoBehaviour
         if (player == null)
             player = GameObject.Find("Player").GetComponentInChildren<Character>();
         else
+        {
+
             lifeText.text = (player.currentHealth.ToString() + " / " + player.maxHealth.ToString());
+            roundCounter.text = "ROUND " + r.round;
+            AttDef.text = "Defense: " + player.weapon.defense;
+            Range.text = "Attack: " + player.weapon.attack;
+        }
     }
 }
