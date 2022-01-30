@@ -16,9 +16,9 @@ public class ModButtonBehaviour : MonoBehaviour
 
         GameObject auxGO;
 
-        for (int i = 0; i < transform.GetChild(0).childCount; i++)
+        foreach (Transform child in transform.GetChild(0).transform)
         {
-            Destroy(transform.GetChild(0).GetChild(0).gameObject);
+            Destroy(child.gameObject);
         }
 
         foreach (KeyValuePair<Perks, int> p in aux)
