@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PerkChoice : MonoBehaviour
 {
     Perks perk;
+    public GameObject myCoin;
     // Start is called before the first frame update
 
     public void setPerk(int j)
@@ -236,5 +237,11 @@ public class PerkChoice : MonoBehaviour
         lm.chosen = true;
 
         gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+
+        myCoin = GameObject.Find("moneda");
+
+        myCoin.GetComponent<Animation>()["CoinIntro"].time = myCoin.GetComponent<Animation>()["CoinIntro"].length;
+        myCoin.GetComponent<Animation>()["CoinIntro"].speed = -1.0f;
+        myCoin.GetComponent<Animation>().Play("CoinIntro");
     }
 }

@@ -10,10 +10,11 @@ public class LogicManager : MonoBehaviour
     public AudioSource fluteSolo;
     public AudioSource orientalSolo;
     public GameState currentState;
+    public GameObject myCoin;
 
     public RectTransform perkPanel;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         room = GameObject.Find("Room").GetComponent<Room>();
         posibleMoves = new List<KeyValuePair<KeyValuePair<int, int>, int>>();
@@ -82,12 +83,23 @@ public class LogicManager : MonoBehaviour
 
         int coin = Random.Range(0, 100);
 
+        myCoin = GameObject.Find("moneda");
+
+        myCoin.GetComponent<Animation>()["CoinIntro"].time = 0.0f;
+        myCoin.GetComponent<Animation>()["CoinIntro"].speed = 1.0f;
+        myCoin.GetComponent<Animation>().Play("CoinIntro");
+
         //Animation and stuff
 
         //Choose perk
         if (coin > 50)
         {
+            while (myCoin.GetComponent<Animation>().isPlaying)
+                yield return null;
+            myCoin.GetComponent<Animation>().Play("CoinHeads");
             Debug.Log("Cruz");
+            while (myCoin.GetComponent<Animation>().isPlaying)
+                yield return null;
             setUpNegativePerk();
             //Desventaja
 
@@ -104,7 +116,12 @@ public class LogicManager : MonoBehaviour
         }
         else
         {
+            while (myCoin.GetComponent<Animation>().isPlaying)
+                yield return null;
+            myCoin.GetComponent<Animation>().Play("CoinTails");
             Debug.Log("Cara");
+            while (myCoin.GetComponent<Animation>().isPlaying)
+                yield return null;
             setUpPerks();
 
             while (!chosen)
